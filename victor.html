@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Táctico | Noah & The Cosmic Cleanup</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Material 3 Expressive vibe -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Syne:wght@600;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        m3: {
+                            base: '#0B0A10',
+                            surface: 'rgba(28, 27, 35, 0.6)',
+                            primary: '#B48EAD', // Soft cosmic purple
+                            accent: '#88C0D0', // Cosmic blue
+                            danger: '#BF616A',
+                            glow: 'rgba(180, 142, 173, 0.15)'
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0B0A10;
+            color: #E5E9F0;
+            overflow-x: hidden;
+        }
+
+        /* iOS 26 Glassmorphism + Material 3 Shapes */
+        .glass-card {
+            background: rgba(35, 34, 45, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 2rem; /* Material 3 large radius */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(180, 142, 173, 0.3);
+        }
+
+        .m3-button {
+            border-radius: 100px; /* Fully rounded M3 */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .m3-button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .m3-button:hover::after {
+            transform: translateX(100%);
+        }
+
+        /* Ambient Cosmic Background */
+        .ambient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.5;
+        }
+
+        /* Scroll Reveal Utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased relative selection:bg-m3-primary selection:text-white">
+
+    <!-- Ambient Background Orbs -->
+    <div class="ambient-orb w-96 h-96 bg-m3-primary top-[-10%] left-[-10%] animate-pulse-slow"></div>
+    <div class="ambient-orb w-[40rem] h-[40rem] bg-m3-accent bottom-[-20%] right-[-10%] animate-pulse-slow" style="animation-delay: 2s;"></div>
+    <div class="ambient-orb w-72 h-72 bg-purple-900 top-[40%] left-[20%] animate-float"></div>
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="header">
+        <div class="glass-card mx-auto mt-4 px-6 py-3 max-w-max flex items-center gap-3 rounded-full border border-white/10 bg-black/20 backdrop-blur-md">
+            <i data-lucide="shield-alert" class="text-m3-primary w-5 h-5"></i>
+            <span class="text-sm font-semibold tracking-wide text-white/80 uppercase">Auditoría Confidencial Alpha</span>
+        </div>
+    </header>
+
+    <main class="relative z-10 px-6 pt-32 pb-24 md:px-12 max-w-6xl mx-auto">
+        
+        <!-- Hero Section -->
+        <section class="text-center mb-32 reveal active">
+            <div class="inline-block mb-6 px-4 py-1.5 rounded-full bg-m3-glow text-m3-primary text-sm font-semibold border border-m3-primary/20">
+                120 Minutos de Análisis. 1 Veredicto.
+            </div>
+            <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-extrabold leading-tight tracking-tight mb-8 text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-white/40">
+                Noah & The<br/>Cosmic Cleanup
+            </h1>
+            <p class="text-xl md:text-2xl text-white/60 max-w-3xl mx-auto font-light leading-relaxed">
+                Tienen un diamante en bruto. El mundo tiene identidad, el HUD es intuitivo y el gamefeel base promete. <br><br>
+                <span class="text-white font-medium">Pero la Alpha actual esconde fricciones letales que destrozarán la retención en Steam.</span>
+            </p>
+        </section>
+
+        <!-- The "Sandwich" Strategy: Start with Positives -->
+        <section class="mb-24 reveal">
+            <h2 class="font-display text-3xl md:text-4xl font-bold mb-10 border-l-4 border-m3-accent pl-6">
+                Lo que ya funciona (El Potencial)
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="glass-card p-8 flex flex-col gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-m3-accent/20 flex items-center justify-center text-m3-accent">
+                        <i data-lucide="palette"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">Identidad Sólida</h3>
+                    <p class="text-white/60 text-sm">Desde el primer minuto, el mundo transmite una atmósfera única. La dirección de arte en UE5 destaca para una fase Alpha.</p>
+                </div>
+                <div class="glass-card p-8 flex flex-col gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-m3-accent/20 flex items-center justify-center text-m3-accent">
+                        <i data-lucide="layout-dashboard"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">HUD Intuitivo</h3>
+                    <p class="text-white/60 text-sm">La interfaz no interfiere. Es limpia, directa y permite al jugador enfocarse en el plataformeo y los puzzles.</p>
+                </div>
+                <div class="glass-card p-8 flex flex-col gap-4">
+                    <div class="w-12 h-12 rounded-2xl bg-m3-accent/20 flex items-center justify-center text-m3-accent">
+                        <i data-lucide="zap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold">Base de Movimiento</h3>
+                    <p class="text-white/60 text-sm">El personaje se mueve bien. La inercia y el salto tienen el "peso" correcto, cimentando un buen gamefeel general.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Pain (The Audit Findings) -->
+        <section class="mb-32 reveal">
+            <h2 class="font-display text-3xl md:text-5xl font-bold mb-4 text-m3-danger">
+                Fugas Críticas de Retención
+            </h2>
+            <p class="text-lg text-white/50 mb-12 max-w-2xl">
+                Identifiqué <span class="text-white font-bold">6 Hallazgos Mayores</span>. Estos 3 son "Game-Breakers" que garantizan reembolsos dentro de la ventana de 120 minutos de Steam.
+            </p>
+
+            <div class="space-y-6">
+                <!-- Issue 1 -->
+                <div class="glass-card p-8 md:p-10 flex flex-col md:flex-row gap-8 items-start border-m3-danger/20 hover:border-m3-danger/50 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-m3-danger/10 rounded-bl-full -z-10 group-hover:scale-110 transition-transform"></div>
+                    <div class="w-16 h-16 shrink-0 rounded-[1.5rem] bg-m3-danger/20 flex items-center justify-center text-m3-danger">
+                        <i data-lucide="volume-x" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-m3-danger/20 text-m3-danger">Prioridad Absoluta</span>
+                            <h3 class="text-2xl font-bold">Colapso Sistémico de Audio</h3>
+                        </div>
+                        <p class="text-white/70 leading-relaxed mb-4">
+                            Múltiples canales de sonido ignoran por completo la configuración del jugador. Existen sonidos de origen desconocido que permanecen durante toda la sesión, rompiendo la inmersión y frustrando al usuario desde el minuto 20.
+                        </p>
+                        <div class="text-sm text-m3-danger font-semibold flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-4 h-4"></i> Impacto: Reseñas negativas inmediatas por "Dolor de cabeza / Bugs de sonido".
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Issue 2 -->
+                <div class="glass-card p-8 md:p-10 flex flex-col md:flex-row gap-8 items-start border-orange-500/20 hover:border-orange-500/50">
+                    <div class="w-16 h-16 shrink-0 rounded-[1.5rem] bg-orange-500/20 flex items-center justify-center text-orange-400">
+                        <i data-lucide="gamepad-2" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-orange-500/20 text-orange-400">Control & Input</span>
+                            <h3 class="text-2xl font-bold">Inconsistencias Liosas (Ej: Teclado)</h3>
+                        </div>
+                        <p class="text-white/70 leading-relaxed mb-4">
+                            El lead sospechaba con razón. Hay acciones no documentadas y limitaciones severas con teclado. El sistema de gadgets (la mecánica central de 14 items) carece del feedback visual/auditivo necesario para entender qué está pasando.
+                        </p>
+                        <div class="text-sm text-orange-400 font-semibold flex items-center gap-2">
+                            <i data-lucide="alert-triangle" class="w-4 h-4"></i> Impacto: Frustración mecánica. El jugador asume que "el juego no responde".
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Issue 3 -->
+                <div class="glass-card p-8 md:p-10 flex flex-col md:flex-row gap-8 items-start border-yellow-500/20 hover:border-yellow-500/50">
+                    <div class="w-16 h-16 shrink-0 rounded-[1.5rem] bg-yellow-500/20 flex items-center justify-center text-yellow-400">
+                        <i data-lucide="bug" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-yellow-500/20 text-yellow-400">Core Gameplay</span>
+                            <h3 class="text-2xl font-bold">Mecánica de Trampas Rota</h3>
+                        </div>
+                        <p class="text-white/70 leading-relaxed mb-4">
+                            Al probar las mecánicas principales, las trampas están completamente rotas en esta build. Una mecánica central fallando en etapas tempranas distorsiona todo el balanceo de niveles y puzzles que el equipo está diseñando.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section (Material 3 Expressive Container) -->
+        <section class="reveal relative z-20">
+            <div class="glass-card p-10 md:p-16 text-center bg-gradient-to-b from-m3-surface to-m3-primary/10 border-m3-primary/30">
+                <h2 class="font-display text-4xl md:text-5xl font-extrabold mb-6">No lancen una demo a ciegas.</h2>
+                <p class="text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed">
+                    Tengo el reporte completo de los 6 hallazgos de controles y el mapeo del colapso de audio. El potencial del producto es real, pero necesitan un proceso de QA sistemático hoy, no después de las reseñas mixtas.
+                </p>
+                
+                <button onclick="document.getElementById('modal').classList.remove('hidden'); document.getElementById('modal').classList.add('flex');" 
+                        class="m3-button bg-white text-black font-bold text-lg px-10 py-5 shadow-[0_0_40px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_rgba(255,255,255,0.5)] transform hover:-translate-y-1 inline-flex items-center gap-3">
+                    Revisar Reporte Completo con Ezequiel
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+                <p class="mt-6 text-sm text-white/40 flex items-center justify-center gap-2">
+                    <i data-lucide="lock" class="w-4 h-4"></i> Datos confidenciales. Sesión estratégica sin cargo.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 py-8 mt-20 relative z-10 bg-black/40 backdrop-blur-lg">
+        <div class="max-w-6xl mx-auto px-6 text-center text-white/30 text-sm">
+            <p>Auditoría Técnica Exclusiva elaborada por Ezequiel Canello.</p>
+            <p class="mt-2">Prohibida su distribución no autorizada.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Modal (M3 Style) -->
+    <div id="modal" class="fixed inset-0 z-[100] hidden items-center justify-center px-4 bg-black/80 backdrop-blur-sm transition-opacity">
+        <div class="glass-card bg-[#1C1B23] w-full max-w-lg p-8 relative scale-100 transform transition-transform border border-white/10">
+            <button onclick="document.getElementById('modal').classList.add('hidden'); document.getElementById('modal').classList.remove('flex');" 
+                    class="absolute top-4 right-4 text-white/50 hover:text-white bg-white/5 rounded-full p-2 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="w-16 h-16 rounded-full bg-m3-primary/20 text-m3-primary flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="calendar-clock" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-3xl font-display font-bold text-center mb-4">Siguiente Paso</h3>
+            <p class="text-white/70 text-center mb-8">
+                Hablemos 15 minutos. Te muestro las grabaciones de los bugs exactos (el bloqueo con el Tabulador y los audios rotos) y te explico cómo podemos blindar tu juego antes del Early Access.
+            </p>
+            
+            <a href="mailto:contacto@ejemplo.com?subject=Revisión%20Auditoría%20-%20Noah%20&%20The%20Cosmic%20Cleanup" 
+               class="m3-button w-full block text-center bg-m3-primary text-white font-bold py-4 hover:bg-opacity-90 shadow-lg shadow-m3-primary/30">
+                Contactar a Ezequiel
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Scroll Reveal Logic (Intersection Observer)
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            const revealOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optional: stop observing once revealed
+                        // observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+
+            // Header Blur on scroll
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.opacity = '0';
+                    header.style.pointerEvents = 'none';
+                } else {
+                    header.style.opacity = '1';
+                    header.style.pointerEvents = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
