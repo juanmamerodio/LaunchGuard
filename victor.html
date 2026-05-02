@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="es" class="scroll-smooth">
 <head>
@@ -334,4 +335,126 @@
                 <div class="glass-card p-6 break-inside-avoid">
                     <span class="text-orange-400 text-xs font-bold uppercase mb-2 block">Medio Impacto</span>
                     <h3 class="font-bold text-lg mb-2">Hitboxes Sobredimensionadas</h3>
-                    <p class="text-white/50 text-sm mb-3
+                    <p class="text-white/50 text-sm mb-3">Troncos y NPCs tienen cajas de colisión gigantes. Las armas chocan contra aire.</p>
+                    <p class="text-white/80 text-xs font-medium">► Riesgo: El juego se percibe injusto. Golpes fantasma arruinan el combate.</p>
+                </div>
+
+                <div class="glass-card p-6 break-inside-avoid">
+                    <span class="text-orange-400 text-xs font-bold uppercase mb-2 block">Medio Impacto</span>
+                    <h3 class="font-bold text-lg mb-2">Cámara Atrapada</h3>
+                    <p class="text-white/50 text-sm mb-3">Al chocar con enemigos, la cámara se mete dentro de las texturas de los personajes, tapando toda la pantalla.</p>
+                    <p class="text-white/80 text-xs font-medium">► Riesgo: Pérdida total de visibilidad y control visual durante peleas.</p>
+                </div>
+
+                <div class="glass-card p-6 break-inside-avoid">
+                    <span class="text-orange-400 text-xs font-bold uppercase mb-2 block">Medio Impacto</span>
+                    <h3 class="font-bold text-lg mb-2">Pseudo Bunny-Hop</h3>
+                    <p class="text-white/50 text-sm mb-3">Encadenar saltos genera aceleraciones e incrementos de altura impredecibles.</p>
+                    <p class="text-white/80 text-xs font-medium">► Riesgo: Rotura de level design por exploits de movimiento accidental.</p>
+                </div>
+
+                <div class="glass-card p-6 break-inside-avoid">
+                    <span class="text-blue-400 text-xs font-bold uppercase mb-2 block">Bajo Impacto</span>
+                    <h3 class="font-bold text-lg mb-2">Cansancio de adorno</h3>
+                    <p class="text-white/50 text-sm mb-3">Hay animación de cansancio al correr, pero no afecta velocidad ni gameplay real.</p>
+                    <p class="text-white/80 text-xs font-medium">► Riesgo: Confusión en las reglas del personaje.</p>
+                </div>
+
+                <div class="glass-card p-6 break-inside-avoid">
+                    <span class="text-blue-400 text-xs font-bold uppercase mb-2 block">Bajo Impacto</span>
+                    <h3 class="font-bold text-lg mb-2">Físicas de Cajas</h3>
+                    <p class="text-white/50 text-sm mb-3">Las cajas solo se pueden destruir, no empujar (salvo un bug raro donde salieron volando).</p>
+                    <p class="text-white/80 text-xs font-medium">► Riesgo: Limita diseño de puzzles ambientales.</p>
+                </div>
+
+                <div class="glass-card p-6 break-inside-avoid">
+                    <span class="text-blue-400 text-xs font-bold uppercase mb-2 block">Bajo Impacto</span>
+                    <h3 class="font-bold text-lg mb-2">Detalles UI & Visuales</h3>
+                    <p class="text-white/50 text-sm mb-3">Fondo de Settings no machea con la estética. Sliders de audio no actualizan en tiempo real. Césped fragmentado que se mueve como gelatina líquida en bloques.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section (The Hook) -->
+        <section class="reveal relative z-20 mt-32">
+            <div class="glass-card p-10 md:p-16 text-center bg-gradient-to-b from-m3-base to-m3-primary/10 border-m3-primary/40 relative overflow-hidden">
+                <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
+                
+                <h2 class="font-display text-4xl md:text-6xl font-extrabold mb-6 relative z-10">Tienen el diagnóstico.<br/>Falta el cirujano.</h2>
+                <p class="text-xl text-white/70 max-w-2xl mx-auto mb-10 leading-relaxed relative z-10">
+                    Saber dónde está sangrando el juego es el 10%. Saber <strong>cómo arreglarlo sin romper el core del producto</strong> es mi trabajo. Tengo las soluciones diseñadas para cada uno de estos 21 puntos.
+                </p>
+                
+                <button onclick="document.getElementById('modal').classList.remove('hidden'); document.getElementById('modal').classList.add('flex');" 
+                        class="m3-button relative z-10 bg-white text-black font-bold text-lg px-12 py-5 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(180,142,173,0.5)] hover:bg-m3-primary hover:text-white transform hover:-translate-y-1 inline-flex items-center gap-3 transition-all duration-300">
+                    Desbloquear Soluciones Tácticas
+                    <i data-lucide="lock-open" class="w-5 h-5"></i>
+                </button>
+                <p class="mt-6 text-sm text-white/40 flex items-center justify-center gap-2 relative z-10">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Agendá una revisión estratégica de 15 minutos con Ezequiel.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Interactive Modal -->
+    <div id="modal" class="fixed inset-0 z-[100] hidden items-center justify-center px-4 bg-black/80 backdrop-blur-md transition-opacity">
+        <div class="glass-card bg-[#1C1B23]/90 w-full max-w-lg p-10 relative scale-100 transform transition-transform border border-m3-primary/30 shadow-[0_0_100px_rgba(180,142,173,0.2)]">
+            <button onclick="document.getElementById('modal').classList.add('hidden'); document.getElementById('modal').classList.remove('flex');" 
+                    class="absolute top-5 right-5 text-white/50 hover:text-white bg-white/5 rounded-full p-2 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-m3-primary to-m3-accent p-0.5 mx-auto mb-6">
+                <div class="w-full h-full bg-m3-base rounded-full flex items-center justify-center">
+                    <i data-lucide="zap" class="w-8 h-8 text-m3-accent"></i>
+                </div>
+            </div>
+            
+            <h3 class="text-3xl font-display font-bold text-center mb-4">El Mapa de Ruta</h3>
+            <p class="text-white/70 text-center mb-8 leading-relaxed">
+                Tengo el esquema de resolución para aislar el colapso de audio y remapear el input de teclado sin tener que refactorizar todo su código actual en UE5. Hablemos y te muestro el plan.
+            </p>
+            
+            <a href="mailto:contacto@ejemplo.com?subject=Revisión%20Auditoría%20-%20Noah%20&%20The%20Cosmic%20Cleanup" 
+               class="m3-button w-full block text-center bg-white text-black font-bold py-4 hover:bg-m3-primary hover:text-white transition-colors duration-300">
+                Agendar Llamada con Ezequiel
+            </a>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const revealOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px"
+            });
+
+            reveals.forEach(reveal => revealOnScroll.observe(reveal));
+
+            const header = document.getElementById('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.style.opacity = '0';
+                    header.style.pointerEvents = 'none';
+                } else {
+                    header.style.opacity = '1';
+                    header.style.pointerEvents = 'auto';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+```
