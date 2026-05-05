@@ -269,75 +269,98 @@
     </div>
 
     <script>
-lucide.createIcons();
+    lucide.createIcons();
 
-        const carousel = document.getElementById('carousel');
-        const indicators = document.querySelectorAll('.indicator');
-        let currentSlide = 0;
-        const totalSlides = 9;
+const carousel = document.getElementById('carousel');
+const indicators = document.querySelectorAll('.indicator');
+let currentSlide = 0;
+const totalSlides = 9;
 
-        // Función para ir a una slide específica
-        function goToSlide(index) {
-            const slideWidth = carousel.offsetWidth;
-            carousel.scrollTo({
-                left: index * slideWidth,
-                behavior: 'smooth'
-            });
+// Buscamos todas las placas para saber su posición exacta
+const slides = carousel.querySelectorAll('.slide-snap');
+
+function goToSlide(index) {
+    if (index < 0 || index >= totalSlides) return;
+    
+    // Usamos offsetLeft para que el scroll sea quirúrgico
+    const targetScroll = slides[index].offsetLeft - carousel.offsetLeft;
+    
+    carousel.scrollTo({
+        left: targetScroll,
+        behavior: 'smooth'
+    });
+    
+    currentSlide = index;
+    updateIndicators();
+}
+
+// Estas funciones ahora son globales para que el onclick las encuentre sí o sí
+window.nextSlide = () => {
+    if (currentSlide < totalSlides - 1) {
+        goToSlide(currentSlide + 1);
+    } else {
+        // Opcional: vuelve al inicio si llega al final
+        goToSlide(0);
+    }
+};
+
+window.prevSlide = () => {
+    if (currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+    }
+};
+
+window.goToSlide = goToSlide;
+
+const updateIndicators = () => {
+    indicators.forEach((ind, index) => {
+        if (index === currentSlide) {
+            ind.classList.remove('bg-white/30', 'w-1.5');
+            ind.classList.add('bg-white', 'w-4');
+        } else {
+            ind.classList.remove('bg-white', 'w-4');
+            ind.classList.add('bg-white/30', 'w-1.5');
         }
+    });
+};
 
-        function nextSlide() {
-            if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
-        }
-
-        function prevSlide() {
-            if (currentSlide > 0) goToSlide(currentSlide - 1);
-        }
-
-        const updateIndicators = () => {
-            indicators.forEach((ind, index) => {
-                if (index === currentSlide) {
-                    ind.classList.remove('bg-white/30', 'w-1.5');
-                    ind.classList.add('bg-white', 'w-4');
-                } else {
-                    ind.classList.remove('bg-white', 'w-4');
-                    ind.classList.add('bg-white/30', 'w-1.5');
-                }
-            });
-        };
-
-        carousel.addEventListener('scroll', () => {
-            const slideWidth = carousel.offsetWidth;
-            const newIndex = Math.round(carousel.scrollLeft / slideWidth);
-            if(newIndex !== currentSlide) {
-                currentSlide = newIndex;
-                updateIndicators();
-            }
-        });
-
+// Listener para actualizar los puntos si el usuario scrollea a mano (en el celu)
+carousel.addEventListener('scroll', () => {
+    const slideWidth = slides[0].offsetWidth;
+    const newIndex = Math.round(carousel.scrollLeft / slideWidth);
+    if(newIndex !== currentSlide && newIndex < totalSlides) {
+        currentSlide = newIndex;
         updateIndicators();
+    }
+});
 
-        async function downloadCurrentSlide() {
-            const targetDiv = document.getElementById(`slide-${currentSlide}`);
-            if(!targetDiv) return;
+// Init
+updateIndicators();
 
-            const flash = document.createElement('div');
-            flash.style.cssText = 'position:fixed;inset:0;background:white;z-index:9999;transition:opacity 0.3s ease-out;';
-            document.body.appendChild(flash);
-            setTimeout(() => flash.style.opacity = '0', 50);
-            setTimeout(() => flash.remove(), 350);
+// Lógica de descarga (mantenela igual)
+async function downloadCurrentSlide() {
+    const targetDiv = document.getElementById(`slide-${currentSlide}`);
+    if(!targetDiv) return;
 
-            try {
-                const canvas = await html2canvas(targetDiv, {
-                    scale: 3,
-                    backgroundColor: '#000000',
-                    useCORS: true
-                });
-                const link = document.createElement('a');
-                link.download = `Slide_${currentSlide + 1}.png`;
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            } catch (e) { console.error(e); }
-        }
+    const flash = document.createElement('div');
+    flash.style.cssText = 'position:fixed;inset:0;background:white;z-index:9999;transition:opacity 0.3s ease-out;';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.style.opacity = '0', 50);
+    setTimeout(() => flash.remove(), 350);
+
+    try {
+        const canvas = await html2canvas(targetDiv, {
+            scale: 3,
+            backgroundColor: '#000000',
+            useCORS: true,
+            logging: false
+        });
+        const link = document.createElement('a');
+        link.download = `Slide_${currentSlide + 1}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    } catch (e) { console.error("Error al descargar:", e); }
+}
     </script>
 </body>
 </html>
