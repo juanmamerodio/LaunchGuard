@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrusel IG - iOS 26 Style</title>
+    <title>Carrusel IG - iOS 26 Authority</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <!-- html2canvas para la captura de nodos -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <script>
@@ -17,17 +13,17 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        // Forzamos la tipografía nativa de Apple para el look iOS 100% real
-                        sans: ['Poppins', 'helvetica'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Helvetica Neue', 'sans-serif'],
                     },
                     colors: {
                         apple: {
                             bg: '#000000',
-                            card: 'rgba(28, 28, 30, 0.65)', // Material translucido
+                            card: 'rgba(28, 28, 30, 0.45)', 
                             blue: '#0A84FF',
                             purple: '#BF5AF2',
                             orange: '#FF9F0A',
                             red: '#FF453A',
+                            green: '#30D158',
                             text: '#F5F5F7',
                             muted: '#86868B'
                         }
@@ -35,446 +31,307 @@
                 }
             }
         }
-poppins-thin {
-  font-family: "Poppins", sans-serif;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.poppins-extralight {
-  font-family: "Poppins", sans-serif;
-  font-weight: 200;
-  font-style: normal;
-}
-
-.poppins-light {
-  font-family: "Poppins", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
-.poppins-regular {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.poppins-medium {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-style: normal;
-}
-
-.poppins-semibold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-style: normal;
-}
-
-.poppins-bold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.poppins-extrabold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 800;
-  font-style: normal;
-}
-
-.poppins-black {
-  font-family: "Poppins", sans-serif;
-  font-weight: 900;
-  font-style: normal;
-}
-
-.poppins-thin-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 100;
-  font-style: italic;
-}
-
-.poppins-extralight-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 200;
-  font-style: italic;
-}
-
-.poppins-light-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 300;
-  font-style: italic;
-}
-
-.poppins-regular-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 400;
-  font-style: italic;
-}
-
-.poppins-medium-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-  font-style: italic;
-}
-
-.poppins-semibold-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-style: italic;
-}
-
-.poppins-bold-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 700;
-  font-style: italic;
-}
-
-.poppins-extrabold-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 800;
-  font-style: italic;
-}
-
-.poppins-black-italic {
-  font-family: "Poppins", sans-serif;
-  font-weight: 900;
-  font-style: italic;
-}
-
     </script>
     <style>
-        
         body {
             background-color: #000000;
             color: #F5F5F7;
-            overflow: hidden; /* Evitar scroll global, solo en el carrusel */
+            overflow: hidden;
         }
         
-        /* Mesh Gradient animado estilo iOS */
         .mesh-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             z-index: -1;
             background: 
-                radial-gradient(circle at 15% 50%, rgba(10, 132, 255, 0.15), transparent 50%),
-                radial-gradient(circle at 85% 30%, rgba(191, 90, 242, 0.15), transparent 50%);
-            filter: blur(60px);
-            animation: pulseBg 10s infinite alternate;
+                radial-gradient(circle at 10% 20%, rgba(10, 132, 255, 0.12), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(191, 90, 242, 0.12), transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(255, 159, 10, 0.05), transparent 50%);
+            filter: blur(80px);
         }
 
-        @keyframes pulseBg {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.1); opacity: 1; }
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        /* Glassmorphism extremo iOS 26 */
         .ios-card {
-            background: var(--card-bg, rgba(28, 28, 30, 0.5));
-            backdrop-filter: blur(40px);
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            background: rgba(28, 28, 30, 0.4);
+            backdrop-filter: blur(50px);
+            -webkit-backdrop-filter: blur(50px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
-        .slide-snap {
-            scroll-snap-align: center;
-        }
+        .slide-snap { scroll-snap-align: center; }
 
-        .text-gradient {
-            background: linear-gradient(135deg, #fff 0%, #86868B 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
+        .text-glow-blue { text-shadow: 0 0 15px rgba(10, 132, 255, 0.5); }
+        .text-glow-red { text-shadow: 0 0 15px rgba(255, 69, 58, 0.5); }
         
+        /* Highlight Estilo Apple */
+        .highlight-blue { color: #0A84FF; font-weight: 800; }
+        .highlight-red { color: #FF453A; font-weight: 800; }
+        .highlight-orange { color: #FF9F0A; font-weight: 800; }
     </style>
 </head>
 <body class="h-screen w-full flex flex-col items-center justify-center font-sans">
 
     <div class="mesh-bg"></div>
 
-    <!-- Controles externos para Juanma/Ezequiel -->
-    <div class="fixed top-6 z-50 flex gap-4">
-        <button onclick="downloadCurrentSlide()" class="flex items-center gap-2 bg-apple-blue/20 hover:bg-apple-blue/30 text-apple-blue px-4 py-2 rounded-full font-semibold transition-all backdrop-blur-md border border-apple-blue/30">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            Descargar Placa Actual
+    <div class="fixed top-6 z-50 flex gap-3">
+        <button onclick="downloadCurrentSlide()" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-full font-bold transition-all backdrop-blur-xl border border-white/10 active:scale-95">
+            <i data-lucide="camera" class="w-4 h-4"></i>
+            Capturar Placa
         </button>
     </div>
 
-    <!-- Contenedor Principal IG (1080x1350 aspect ratio, escalado) -->
-    <div class="relative w-full max-w-[400px] h-[80vh] max-h-[500px] sm:max-h-[650px] mt-8">
+    <!-- Contenedor Principal (IG 4:5 Aspect Ratio) -->
+    <div class="relative w-full max-w-[400px] h-[80vh] max-h-[600px] sm:max-h-[700px] mt-4">
         
-        <div id="carousel" class="flex h-full overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 scroll-smooth px-4 sm:px-0">
+        <div id="carousel" class="flex h-full overflow-x-auto no-scrollbar snap-x snap-mandatory gap-6 scroll-smooth px-6">
             
-            <!-- SLIDE 1: Hook Extremo -->
-            <div id="slide-0" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden group capture-target">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="flame" class="w-5 h-5 text-apple-orange fill-apple-orange"></i>
-                    <span class="text-[10px] font-bold tracking-widest text-apple-muted uppercase">Verdad Oculta</span>
+            <!-- SLIDE 1: El Gancho Brutal -->
+            <div id="slide-0" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target">
+                <div class="z-10">
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="bg-apple-red/20 text-apple-red px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter">Leak Industrial</span>
+                    </div>
+                    <h2 class="text-[2.8rem] font-black leading-[1.05] tracking-tight text-white mb-6">
+                        CD Projekt RED <span class="highlight-red">mintió</span> y facturó millones.
+                    </h2>
+                    <p class="text-apple-muted text-xl font-medium leading-tight">
+                        Cyberpunk salió roto y sobrevivieron por tener <span class="text-white underline">billetera infinita</span>. 
+                    </p>
                 </div>
-                <div class="mt-16 z-10">
-                    <h2 class="text-[2.6rem] font-extrabold leading-[1.05] tracking-tight text-white">CD Projekt RED mintió y facturó millones.</h2>
+                <div class="z-10 mb-6 bg-white/5 p-5 rounded-2xl border border-white/5 backdrop-blur-md">
+                    <p class="text-white font-bold text-lg">Vos sos indie. Si tu juego sale roto, <span class="highlight-orange">estás muerto.</span></p>
                 </div>
-                <div class="mb-8 z-10">
-                    <p class="text-apple-muted text-xl font-medium leading-relaxed border-l-2 border-apple-orange pl-4">Vos sos indie. Si tu juego sale roto, estás quebrado.</p>
-                </div>
-                <!-- Sombra decorativa -->
-                <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-apple-orange/20 blur-[80px] rounded-full z-0"></div>
+                <div class="absolute -bottom-10 -right-10 w-48 h-48 bg-apple-red/10 blur-3xl rounded-full"></div>
             </div>
 
-            <!-- SLIDE 2: Problema -->
-            <div id="slide-1" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden capture-target">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="trending-down" class="w-5 h-5 text-apple-red"></i>
-                    <span class="text-[10px] font-bold tracking-widest text-apple-muted uppercase">El Precipicio</span>
+            <!-- SLIDE 2: El Dolor Personal -->
+            <div id="slide-1" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target">
+                <div class="z-10">
+                    <span class="text-[10px] font-black text-apple-muted uppercase tracking-[0.2em] mb-4 block">Realidad Cruda</span>
+                    <h2 class="text-3xl font-extrabold leading-tight text-white mb-6">
+                        Pasaste 3 años programando en tu cuarto...
+                    </h2>
+                    <p class="text-apple-muted text-lg font-medium leading-relaxed">
+                        Lanzás en Steam. Te vas a dormir feliz.<br><br>
+                        Te despertás con un <span class="highlight-red text-2xl">45% de reembolsos</span> y 200 comentarios odiándote.
+                    </p>
                 </div>
-                <div class="mt-16">
-                    <h2 class="text-3xl font-bold leading-tight text-white tracking-tight">Pasaste 3 años programando en tu cuarto.</h2>
-                    <p class="text-apple-muted mt-6 text-lg font-medium leading-relaxed">Lanzás en Steam.<br>A las 2 horas tenés un <strong class="text-apple-red">45% de reembolsos.</strong></p>
-                </div>
-                <div class="mb-8 bg-apple-red/10 border border-apple-red/20 rounded-2xl p-5 backdrop-blur-md">
-                    <p class="text-white font-semibold text-sm leading-tight">El algoritmo te marca en rojo. Tu juego muere el Día 1. ¿Qué falló?</p>
+                <div class="z-10 mb-6 flex items-center gap-4">
+                    <div class="w-14 h-14 bg-apple-red/20 rounded-2xl flex items-center justify-center">
+                        <i data-lucide="skull" class="w-8 h-8 text-apple-red"></i>
+                    </div>
+                    <p class="text-white font-bold">El algoritmo de Steam acaba de <span class="underline">enterrar tu carrera.</span></p>
                 </div>
             </div>
 
-            <!-- SLIDE 3: Error Común -->
-            <div id="slide-2" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden capture-target">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="users" class="w-5 h-5 text-apple-muted"></i>
-                    <span class="text-[10px] font-bold tracking-widest text-apple-muted uppercase">El error de los $10,000</span>
-                </div>
-                <div class="mt-16">
-                    <h2 class="text-[2.2rem] font-bold leading-tight text-white tracking-tight">"Pero mis amigos de Discord me dijeron que estaba buenísimo."</h2>
-                    <div class="mt-8 space-y-4">
-                        <p class="text-apple-muted text-lg font-medium leading-relaxed">Tus amigos te quieren y juegan gratis. Ignoran los bugs sin darse cuenta.</p>
+            <!-- SLIDE 3: El Error del Ego -->
+            <div id="slide-2" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target">
+                <div class="z-10">
+                    <h2 class="text-[2.2rem] font-black leading-tight text-white mb-8">
+                        "Pero mis amigos de Discord dicen que está <span class="highlight-blue">buenísimo</span>..."
+                    </h2>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <i data-lucide="message-circle-x" class="w-6 h-6 text-apple-orange shrink-0"></i>
+                            <p class="text-apple-muted text-lg font-medium">Tus amigos te quieren. Por eso <span class="text-white">te mienten</span> (aunque no quieran).</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <i data-lucide="dollar-sign" class="w-6 h-6 text-apple-green shrink-0"></i>
+                            <p class="text-apple-muted text-lg font-medium">El yankee que pagó $20 USD no es tu amigo. <span class="text-white">Quiere sangre.</span></p>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-8">
-                    <p class="text-white text-xl font-bold border-l-2 border-white pl-4">El yankee que pagó $20 USD no te perdona NADA.</p>
+                <div class="z-10 mb-4 bg-apple-blue/10 p-4 rounded-xl text-center border border-apple-blue/20">
+                    <p class="text-apple-blue font-black uppercase text-xs tracking-widest">Deja de escuchar a tu círculo.</p>
                 </div>
             </div>
 
-            <!-- SLIDE 4: Replantear -->
-            <div id="slide-3" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden capture-target" style="--card-bg: rgba(10, 132, 255, 0.1);">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="eye" class="w-5 h-5 text-apple-blue"></i>
-                    <span class="text-[10px] font-bold tracking-widest text-apple-blue uppercase">Cambio de Paradigma</span>
+            <!-- SLIDE 4: El Reframe -->
+            <div id="slide-3" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target" style="--card-bg: rgba(10, 132, 255, 0.15);">
+                <div class="z-10">
+                    <span class="text-[10px] font-black text-apple-blue uppercase tracking-widest mb-4 block">La Nueva Regla</span>
+                    <h2 class="text-4xl font-black leading-none text-white tracking-tighter mb-8">
+                        Tus gráficos <br><span class="text-apple-blue">no importan.</span>
+                    </h2>
+                    <p class="text-apple-muted text-xl font-medium leading-snug mb-6">
+                        Lo único que evita que alguien pida un reembolso son los <span class="highlight-blue">primeros 120 minutos</span> de experiencia.
+                    </p>
                 </div>
-                <div class="mt-16">
-                    <h2 class="text-4xl font-extrabold leading-[1.1] text-white tracking-tight">La calidad gráfica no importa.</h2>
-                    <p class="text-apple-muted mt-6 text-lg font-medium leading-relaxed">El <strong class="text-white">"Game Feel" de los primeros 120 minutos</strong> es lo único que separa a un hit de un juego muerto.</p>
-                </div>
-                <div class="mb-8 flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-apple-blue/20 flex items-center justify-center">
-                        <i data-lucide="refresh-ccw" class="w-6 h-6 text-apple-blue"></i>
+                <div class="z-10 mb-6 flex flex-col gap-2">
+                    <div class="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-apple-blue w-2/3 shadow-[0_0_10px_#0A84FF]"></div>
                     </div>
-                    <p class="text-white font-bold text-lg">Es la Regla del Reembolso.</p>
+                    <p class="text-[10px] text-right font-bold text-apple-blue uppercase italic tracking-widest">Ventana crítica de Reembolso</p>
                 </div>
             </div>
 
-            <!-- SLIDE 5: Sistema Paso 1 -->
-            <div id="slide-4" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden capture-target">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <span class="text-[10px] font-bold tracking-widest text-apple-muted uppercase">Sistema Launchguard 1/3</span>
+            <!-- SLIDE 5: Sistema 1 -->
+            <div id="slide-4" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target">
+                <div class="z-10">
+                    <h2 class="text-3xl font-black text-white mb-2"><span class="highlight-blue">01.</span> Fricción Cero.</h2>
+                    <span class="text-apple-muted font-bold text-xs uppercase tracking-widest block mb-8">Filtro de Impaciencia</span>
+                    <p class="text-apple-muted text-lg font-medium leading-relaxed">
+                        Si el jugador tarda más de <span class="text-white">60 segundos</span> en entender cómo jugar, ya lo perdiste. 
+                    </p>
                 </div>
-                <div class="mt-16">
-                    <h2 class="text-3xl font-bold leading-tight text-white tracking-tight"><span class="text-apple-blue">01.</span> Fricción Cero.</h2>
-                    <p class="text-apple-muted mt-6 text-lg font-medium leading-relaxed">El menú, el tutorial y el primer boss deben fluir a 60fps sin pestañear.</p>
-                </div>
-                <div class="mb-8 bg-white/5 border border-white/10 rounded-2xl p-5">
-                    <p class="text-white font-medium text-sm">Si el jugador se traba con un botón mal mapeado en el minuto 10, la venta se cae.</p>
-                </div>
-            </div>
-
-            <!-- SLIDE 6: Sistema Paso 2 -->
-            <div id="slide-5" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden capture-target">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <span class="text-[10px] font-bold tracking-widest text-apple-muted uppercase">Sistema Launchguard 2/3</span>
-                </div>
-                <div class="mt-16">
-                    <h2 class="text-3xl font-bold leading-tight text-white tracking-tight"><span class="text-apple-blue">02.</span> Caza de <br>Game-Breakers.</h2>
-                    <p class="text-apple-muted mt-6 text-lg font-medium leading-relaxed">Un glitch visual da risa en Twitter. Un bug que corrompe la partida guardada genera reseñas rojas.</p>
-                </div>
-                <div class="mb-8 flex gap-4 items-center">
-                    <i data-lucide="shield-alert" class="w-8 h-8 text-apple-red"></i>
-                    <p class="text-white font-bold text-lg">Priorizá la estabilidad sobre el nuevo DLC.</p>
+                <div class="z-10 mb-6 bg-white/5 p-6 rounded-[2rem] border border-white/5 backdrop-blur-xl">
+                    <p class="text-white font-bold">Un botón mal mapeado en el tutorial es una <span class="highlight-red">reseña negativa</span> garantizada.</p>
                 </div>
             </div>
 
-            <!-- SLIDE 7: Sistema Paso 3 -->
-            <div id="slide-6" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden capture-target">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <span class="text-[10px] font-bold tracking-widest text-apple-muted uppercase">Sistema Launchguard 3/3</span>
+            <!-- SLIDE 6: Sistema 2 -->
+            <div id="slide-5" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target">
+                <div class="z-10">
+                    <h2 class="text-3xl font-black text-white mb-2"><span class="highlight-blue">02.</span> Game Breakers.</h2>
+                    <span class="text-apple-muted font-bold text-xs uppercase tracking-widest block mb-8">El fin de la partida</span>
+                    <p class="text-apple-muted text-lg font-medium leading-relaxed">
+                        Un glitch visual es un meme. <br>Un bug en el <span class="text-white">save-system</span> es el fin de tu estudio.
+                    </p>
                 </div>
-                <div class="mt-16">
-                    <h2 class="text-3xl font-bold leading-tight text-white tracking-tight"><span class="text-apple-blue">03.</span> Auditoría Sin Piedad.</h2>
-                    <p class="text-apple-muted mt-6 text-lg font-medium leading-relaxed">Necesitás a un cirujano técnico que busque activamente romper tu juego.</p>
-                </div>
-                <div class="mb-8">
-                    <p class="text-white text-xl font-bold">Que lo rompa él ahora, antes de que lo haga el mercado mañana.</p>
+                <div class="z-10 mb-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-apple-red animate-pulse"></div>
+                        <p class="text-xs font-black uppercase text-apple-red tracking-widest">Prioridad Crítica</p>
+                    </div>
+                    <p class="text-apple-muted text-sm italic">"Si rompe la progresión, matalo hoy mismo."</p>
                 </div>
             </div>
 
-            <!-- SLIDE 8: Transformación -->
-            <div id="slide-7" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-between relative overflow-hidden capture-target" style="--card-bg: rgba(48, 209, 88, 0.1);">
-                <div class="absolute top-8 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="check-circle" class="w-5 h-5 text-[#30D158]"></i>
-                    <span class="text-[10px] font-bold tracking-widest text-[#30D158] uppercase">El Resultado</span>
+            <!-- SLIDE 7: Sistema 3 -->
+            <div id="slide-6" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target">
+                <div class="z-10">
+                    <h2 class="text-3xl font-black text-white mb-2"><span class="highlight-blue">03.</span> Auditoría Hostil.</h2>
+                    <span class="text-apple-muted font-bold text-xs uppercase tracking-widest block mb-8">Blindaje día 1</span>
+                    <p class="text-apple-muted text-lg font-medium leading-relaxed">
+                        Necesitás a alguien que <span class="highlight-orange">odie tu juego</span> lo suficiente como para intentar romperlo en cada rincón.
+                    </p>
                 </div>
-                <div class="mt-16">
-                    <h2 class="text-4xl font-extrabold leading-[1.1] text-white tracking-tight">De sobrevivir a escalar.</h2>
-                    <ul class="mt-8 space-y-4">
-                        <li class="flex items-center gap-3 text-white font-medium"><i data-lucide="arrow-up-right" class="text-[#30D158]"></i> 95% Retención inicial</li>
-                        <li class="flex items-center gap-3 text-white font-medium"><i data-lucide="arrow-down-right" class="text-[#30D158]"></i> Reembolsos < 2%</li>
-                        <li class="flex items-center gap-3 text-white font-medium"><i data-lucide="star" class="text-[#30D158] fill-[#30D158]"></i> Algoritmo orgánico activado</li>
-                    </ul>
+                <div class="z-10 mb-6">
+                    <div class="p-6 border-2 border-dashed border-white/10 rounded-[2rem] text-center">
+                        <i data-lucide="microscope" class="w-10 h-10 text-apple-blue mx-auto mb-3"></i>
+                        <p class="text-white font-bold text-sm">Yo busco el desastre para que vos no lo vivas.</p>
+                    </div>
                 </div>
-                <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-[#30D158]/20 blur-[80px] rounded-full z-0"></div>
             </div>
 
-            <!-- SLIDE 9: CTA Directo -->
-            <div id="slide-8" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[2.5rem] p-8 flex flex-col justify-center text-center relative overflow-hidden capture-target" style="--card-bg: rgba(10, 132, 255, 0.2);">
+            <!-- SLIDE 8: La Transformación -->
+            <div id="slide-7" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-between relative overflow-hidden capture-target" style="--card-bg: rgba(48, 209, 88, 0.1);">
+                <div class="z-10">
+                    <h2 class="text-4xl font-black text-white leading-tight mb-8">Día del Lanzamiento: <span class="text-apple-green text-glow-green">Paz Mental.</span></h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 bg-apple-green/10 p-4 rounded-2xl">
+                            <i data-lucide="trending-up" class="w-6 h-6 text-apple-green"></i>
+                            <p class="text-white font-bold">Reseñas: Mayormente Positivas</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-apple-green/10 p-4 rounded-2xl">
+                            <i data-lucide="coins" class="w-6 h-6 text-apple-green"></i>
+                            <p class="text-white font-bold">Reembolsos: < 1.5%</p>
+                        </div>
+                        <div class="flex items-center gap-4 bg-apple-green/10 p-4 rounded-2xl">
+                            <i data-lucide="party-popper" class="w-6 h-6 text-apple-green"></i>
+                            <p class="text-white font-bold">Siguiente proyecto: Financiado</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 9: CTA Manychat -->
+            <div id="slide-8" class="slide-snap flex-shrink-0 w-full h-full ios-card rounded-[3rem] p-10 flex flex-col justify-center text-center relative overflow-hidden capture-target">
                 <div class="z-10 flex flex-col items-center">
-                    <div class="w-20 h-20 bg-black/50 backdrop-blur-xl rounded-[1.5rem] flex items-center justify-center mb-6 border border-white/10">
-                        <i data-lucide="lock" class="w-8 h-8 text-apple-blue"></i>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-apple-blue to-apple-purple rounded-[2rem] flex items-center justify-center mb-8 shadow-[0_15px_40px_rgba(10,132,255,0.4)]">
+                        <i data-lucide="lock" class="w-10 h-10 text-white"></i>
                     </div>
                     
-                    <h2 class="text-3xl font-extrabold leading-tight text-white tracking-tight mb-4">Asegurá tu facturación hoy.</h2>
-                    <p class="text-apple-muted mb-8 text-sm font-medium">Soy Ezequiel Canello. Blindo lanzamientos.</p>
+                    <h2 class="text-3xl font-black leading-tight text-white mb-6">Blinda tus ingresos.</h2>
                     
-                    <div class="bg-black/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 w-full mb-8">
-                        <p class="text-apple-muted text-sm font-medium uppercase tracking-widest mb-2">Comentá la palabra</p>
-                        <p class="text-white text-3xl font-black tracking-widest mb-2">"BLINDAJE"</p>
-                        <p class="text-apple-muted text-xs">y te mando mi checklist privada de supervivencia del Día 1.</p>
+                    <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 w-full mb-10">
+                        <p class="text-apple-muted text-xs font-black uppercase tracking-[0.3em] mb-3">Comentá ahora</p>
+                        <p class="text-white text-4xl font-black tracking-tighter mb-4">"BLINDAJE"</p>
+                        <p class="text-apple-muted text-sm font-medium">y te envío el checklist que salva estudios.</p>
                     </div>
 
-                    <div class="flex items-center justify-center gap-2 opacity-50">
-                        <i data-lucide="send" class="w-4 h-4"></i>
-                        <span class="text-xs tracking-wider">MANDÁ ESTO A TU DEV</span>
+                    <div class="flex items-center gap-3 bg-black/50 px-6 py-3 rounded-full border border-white/5">
+                        <div class="w-2 h-2 rounded-full bg-apple-green shadow-[0_0_10px_#30D158]"></div>
+                        <span class="text-[10px] font-black text-white uppercase tracking-widest">Ezequiel Canello | Launchguard</span>
                     </div>
                 </div>
-                <div class="absolute inset-0 bg-gradient-to-t from-apple-blue/20 to-transparent z-0"></div>
             </div>
 
         </div>
 
-        <!-- Dynamic Island style indicators -->
-        <div class="absolute -bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#1C1C1E]/80 backdrop-blur-xl px-4 py-2 rounded-full border border-white/10">
-            <div class="w-1.5 h-1.5 rounded-full bg-white transition-all duration-300 indicator" data-index="0"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="1"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="2"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="3"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="4"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="5"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="6"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="7"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/30 transition-all duration-300 indicator" data-index="8"></div>
+        <!-- Dynamic Island Indicators -->
+        <div class="absolute -bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#1C1C1E]/60 backdrop-blur-2xl px-5 py-2.5 rounded-full border border-white/10">
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="0"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="1"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="2"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="3"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="4"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="5"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="6"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="7"></div>
+            <div class="indicator w-1.5 h-1.5 rounded-full bg-white/20 transition-all duration-300" data-index="8"></div>
         </div>
     </div>
 
     <script>
-    lucide.createIcons();
+        lucide.createIcons();
 
-const carousel = document.getElementById('carousel');
-const indicators = document.querySelectorAll('.indicator');
-let currentSlide = 0;
-const totalSlides = 9;
+        const carousel = document.getElementById('carousel');
+        const indicators = document.querySelectorAll('.indicator');
+        let currentSlide = 0;
 
-// Buscamos todas las placas para saber su posición exacta
-const slides = carousel.querySelectorAll('.slide-snap');
+        const updateIndicators = () => {
+            indicators.forEach((ind, index) => {
+                if (index === currentSlide) {
+                    ind.classList.replace('bg-white/20', 'bg-white');
+                    ind.classList.replace('w-1.5', 'w-5');
+                } else {
+                    ind.classList.replace('bg-white', 'bg-white/20');
+                    ind.classList.replace('w-5', 'w-1.5');
+                }
+            });
+        };
 
-function goToSlide(index) {
-    if (index < 0 || index >= totalSlides) return;
-    
-    // Usamos offsetLeft para que el scroll sea quirúrgico
-    const targetScroll = slides[index].offsetLeft - carousel.offsetLeft;
-    
-    carousel.scrollTo({
-        left: targetScroll,
-        behavior: 'smooth'
-    });
-    
-    currentSlide = index;
-    updateIndicators();
-}
-
-// Estas funciones ahora son globales para que el onclick las encuentre sí o sí
-window.nextSlide = () => {
-    if (currentSlide < totalSlides - 1) {
-        goToSlide(currentSlide + 1);
-    } else {
-        // Opcional: vuelve al inicio si llega al final
-        goToSlide(0);
-    }
-};
-
-window.prevSlide = () => {
-    if (currentSlide > 0) {
-        goToSlide(currentSlide - 1);
-    }
-};
-
-window.goToSlide = goToSlide;
-
-const updateIndicators = () => {
-    indicators.forEach((ind, index) => {
-        if (index === currentSlide) {
-            ind.classList.remove('bg-white/30', 'w-1.5');
-            ind.classList.add('bg-white', 'w-4');
-        } else {
-            ind.classList.remove('bg-white', 'w-4');
-            ind.classList.add('bg-white/30', 'w-1.5');
-        }
-    });
-};
-
-// Listener para actualizar los puntos si el usuario scrollea a mano (en el celu)
-carousel.addEventListener('scroll', () => {
-    const slideWidth = slides[0].offsetWidth;
-    const newIndex = Math.round(carousel.scrollLeft / slideWidth);
-    if(newIndex !== currentSlide && newIndex < totalSlides) {
-        currentSlide = newIndex;
-        updateIndicators();
-    }
-});
-
-// Init
-updateIndicators();
-
-// Lógica de descarga (mantenela igual)
-async function downloadCurrentSlide() {
-    const targetDiv = document.getElementById(`slide-${currentSlide}`);
-    if(!targetDiv) return;
-
-    const flash = document.createElement('div');
-    flash.style.cssText = 'position:fixed;inset:0;background:white;z-index:9999;transition:opacity 0.3s ease-out;';
-    document.body.appendChild(flash);
-    setTimeout(() => flash.style.opacity = '0', 50);
-    setTimeout(() => flash.remove(), 350);
-
-    try {
-        const canvas = await html2canvas(targetDiv, {
-            scale: 3,
-            backgroundColor: '#000000',
-            useCORS: true,
-            logging: false
+        carousel.addEventListener('scroll', () => {
+            const slideWidth = carousel.clientWidth;
+            const newIndex = Math.round(carousel.scrollLeft / slideWidth);
+            if(newIndex !== currentSlide) {
+                currentSlide = newIndex;
+                updateIndicators();
+            }
         });
-        const link = document.createElement('a');
-        link.download = `Slide_${currentSlide + 1}.png`;
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-    } catch (e) { console.error("Error al descargar:", e); }
-}
+
+        updateIndicators();
+
+        async function downloadCurrentSlide() {
+            const targetDiv = document.getElementById(`slide-${currentSlide}`);
+            if(!targetDiv) return;
+
+            // Flash effect
+            const flash = document.createElement('div');
+            flash.style.cssText = 'position:fixed;inset:0;background:white;z-index:9999;transition:opacity 0.4s';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.style.opacity = '0', 50);
+            setTimeout(() => flash.remove(), 450);
+
+            try {
+                const canvas = await html2canvas(targetDiv, {
+                    scale: 3, 
+                    backgroundColor: '#000',
+                    useCORS: true,
+                    borderRadius: 48
+                });
+                const link = document.createElement('a');
+                link.download = `LaunchGuard_Slide_${currentSlide + 1}.png`;
+                link.href = canvas.toDataURL("image/png", 1.0);
+                link.click();
+            } catch (e) {
+                console.error(e);
+            }
+        }
     </script>
 </body>
 </html>
