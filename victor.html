@@ -269,19 +269,35 @@
     </div>
 
     <script>
-        lucide.createIcons();
+lucide.createIcons();
 
         const carousel = document.getElementById('carousel');
         const indicators = document.querySelectorAll('.indicator');
         let currentSlide = 0;
         const totalSlides = 9;
 
-        // Actualizar indicadores
+        // Función para ir a una slide específica
+        function goToSlide(index) {
+            const slideWidth = carousel.offsetWidth;
+            carousel.scrollTo({
+                left: index * slideWidth,
+                behavior: 'smooth'
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) goToSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) goToSlide(currentSlide - 1);
+        }
+
         const updateIndicators = () => {
             indicators.forEach((ind, index) => {
                 if (index === currentSlide) {
                     ind.classList.remove('bg-white/30', 'w-1.5');
-                    ind.classList.add('bg-white', 'w-4'); // Expande como dynamic island
+                    ind.classList.add('bg-white', 'w-4');
                 } else {
                     ind.classList.remove('bg-white', 'w-4');
                     ind.classList.add('bg-white/30', 'w-1.5');
@@ -289,10 +305,8 @@
             });
         };
 
-        // Scroll listener para el celular/mouse
         carousel.addEventListener('scroll', () => {
-            const slideWidth = carousel.clientWidth;
-            // Cálculo preciso para el snapping
+            const slideWidth = carousel.offsetWidth;
             const newIndex = Math.round(carousel.scrollLeft / slideWidth);
             if(newIndex !== currentSlide) {
                 currentSlide = newIndex;
@@ -300,49 +314,29 @@
             }
         });
 
-        // INIT
         updateIndicators();
 
-        // LÓGICA DE CAPTURA HTML2CANVAS (Para Juanma)
         async function downloadCurrentSlide() {
-            // Buscamos el div exacto que está activo
             const targetDiv = document.getElementById(`slide-${currentSlide}`);
-            
             if(!targetDiv) return;
 
-            // Agregamos un efecto visual de "flash" como un iPhone
             const flash = document.createElement('div');
-            flash.style.position = 'fixed';
-            flash.style.inset = '0';
-            flash.style.backgroundColor = 'white';
-            flash.style.zIndex = '9999';
-            flash.style.transition = 'opacity 0.3s ease-out';
+            flash.style.cssText = 'position:fixed;inset:0;background:white;z-index:9999;transition:opacity 0.3s ease-out;';
             document.body.appendChild(flash);
-            
             setTimeout(() => flash.style.opacity = '0', 50);
             setTimeout(() => flash.remove(), 350);
 
             try {
-                // Generamos el canvas manteniendo las propiedades CSS
                 const canvas = await html2canvas(targetDiv, {
-                    scale: 3, // Alta resolución para IG (1080x1350)
-                    backgroundColor: '#000000', // Fondo negro base de Apple
-                    logging: false,
-                    useCORS: true,
-                    allowTaint: true
+                    scale: 3,
+                    backgroundColor: '#000000',
+                    useCORS: true
                 });
-
-                // Convertir a imagen y descargar
-                const image = canvas.toDataURL("image/png", 1.0);
                 const link = document.createElement('a');
-                link.download = `Ezequiel_Carousel_Slide_${currentSlide + 1}.png`;
-                link.href = image;
+                link.download = `Slide_${currentSlide + 1}.png`;
+                link.href = canvas.toDataURL("image/png");
                 link.click();
-
-            } catch (error) {
-                console.error("Error capturando la placa:", error);
-                alert("Hubo un error al generar la imagen.");
-            }
+            } catch (e) { console.error(e); }
         }
     </script>
 </body>
