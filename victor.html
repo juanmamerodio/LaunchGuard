@@ -16,9 +16,10 @@
                     },
                     colors: {
                         brand: {
-                            blue: '#0052FF', // Azul vibrante, muy profesional y tech
+                            blue: '#0052FF', // Azul vibrante
                             light: '#F8FAFC',
-                            dark: '#0F172A'
+                            dark: '#0F172A',
+                            accent: '#FF3366' // Rojo/Rosa para alertas visuales
                         }
                     }
                 }
@@ -31,7 +32,6 @@
             color: #0F172A;
         }
         
-        /* Ocultar scrollbar pero permitir scroll */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -49,139 +49,146 @@
         .slide-snap {
             scroll-snap-align: center;
         }
+
+        /* Gradiente para texto de alto impacto */
+        .text-gradient {
+            background: linear-gradient(135deg, #0F172A 0%, #334155 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center font-sans p-4 sm:p-8">
 
-    <!-- Header de Contexto (Solo para la vista web, no va en IG) -->
     <div class="max-w-md w-full mb-6 text-center">
-        <h1 class="text-xl font-bold text-gray-800">Preview: Instagram 4:5</h1>
+        <h1 class="text-xl font-bold text-gray-800">Preview: Instagram 4:5 (Viral Funnel)</h1>
         <p class="text-sm text-gray-500">Deslizá para ver el carrusel</p>
     </div>
 
-    <!-- Contenedor Principal del Carrusel (Simulador IG) -->
     <div class="relative max-w-md w-full">
         
-        <!-- Carrusel -->
         <div id="carousel" class="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 pb-4 pt-2 scroll-smooth">
             
-            <!-- Slide 1: El Gancho -->
-            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden group">
-                <!-- Watermark discreta -->
+            <!-- Slide 1: El Gancho Extremo -->
+            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
                 <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
-                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">LaunchGuard</span>
+                    <i data-lucide="zap" class="w-5 h-5 text-brand-blue fill-brand-blue"></i>
+                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">Verdad Incómoda</span>
                 </div>
 
                 <div class="mt-16">
-                    <span class="text-brand-blue font-bold tracking-widest text-xs uppercase mb-3 block">La mentira del Indie Dev</span>
-                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-brand-dark tracking-tight">"Mis amigos ya testearon el juego, estamos listos para lanzar."</h2>
+                    <h2 class="text-[2.75rem] font-extrabold mt-2 leading-[1.05] text-brand-dark tracking-tight">Pasaste 2 años programando para perder toda tu plata en 120 minutos.</h2>
                 </div>
 
                 <div class="mb-4">
-                    <p class="text-gray-500 text-xl font-medium leading-relaxed">La frase exacta que antecede a un desastre financiero en Steam.</p>
+                    <p class="text-gray-500 text-xl font-medium leading-relaxed border-l-4 border-brand-blue pl-4">Y no tiene nada que ver con los gráficos de tu juego.</p>
                 </div>
                 
-                <!-- Hint to swipe -->
                 <div class="absolute right-6 bottom-6 animate-pulse text-gray-300">
                     <i data-lucide="arrow-right" class="w-6 h-6"></i>
                 </div>
             </div>
 
-            <!-- Slide 2: El Dolor -->
+            <!-- Slide 2: La Realidad / El Problema -->
             <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
                 <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
-                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">LaunchGuard</span>
+                    <i data-lucide="alert-triangle" class="w-5 h-5 text-brand-accent"></i>
+                    <span class="text-xs font-bold tracking-widest text-brand-accent uppercase">Regla de Steam</span>
                 </div>
 
                 <div class="mt-16">
-                    <span class="text-red-500 font-bold tracking-widest text-xs uppercase mb-3 block">El problema real</span>
-                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-brand-dark tracking-tight">Ceguera de Taller.</h2>
-                    <p class="text-gray-600 mt-6 text-lg font-medium leading-relaxed">Tu equipo ya sabe cómo esquivar los bugs de forma inconsciente. <br><br>Los jugadores nuevos no.</p>
+                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-gradient tracking-tight">El jugador es un mercenario.</h2>
+                    <p class="text-gray-600 mt-6 text-lg font-medium leading-relaxed">Si hay fricción, un bug molesto o el control es tosco en las primeras 2 horas... <strong class="text-brand-dark">Hay REEMBOLSO automático.</strong></p>
                 </div>
 
-                <div class="mb-4 bg-gray-50 border border-gray-100 rounded-2xl p-5">
-                    <div class="flex items-start gap-3">
-                        <i data-lucide="alert-circle" class="w-6 h-6 text-red-500 shrink-0 mt-0.5"></i>
-                        <p class="text-gray-800 font-semibold text-base">Steam no perdona: 1 bug crítico en los primeros 120 minutos = Reembolso automático.</p>
-                    </div>
+                <div class="mb-4 bg-red-50 border border-red-100 rounded-2xl p-5">
+                    <p class="text-red-700 font-bold text-base leading-tight">Tu review pasa a "Mayormente Negativa" y el algoritmo de Steam entierra tu juego para siempre.</p>
                 </div>
             </div>
 
-            <!-- Slide 3: El Paradigma -->
-            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
-                <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
-                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">LaunchGuard</span>
-                </div>
-
-                <div class="mt-16">
-                    <span class="text-brand-blue font-bold tracking-widest text-xs uppercase mb-3 block">El Cambio</span>
-                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-brand-dark tracking-tight">No necesitás "testers".<br>Necesitás blindar tus ingresos.</h2>
-                </div>
-
-                <div class="mb-4 space-y-5">
-                    <div class="flex items-center gap-4 bg-white shadow-sm border border-gray-50 p-4 rounded-xl">
-                        <div class="bg-brand-blue/10 p-2 rounded-lg">
-                            <i data-lucide="search" class="w-6 h-6 text-brand-blue"></i>
-                        </div>
-                        <p class="text-gray-700 font-semibold text-base">Auditoría agresiva Día 1.</p>
-                    </div>
-                    <div class="flex items-center gap-4 bg-white shadow-sm border border-gray-50 p-4 rounded-xl">
-                        <div class="bg-brand-blue/10 p-2 rounded-lg">
-                            <i data-lucide="gamepad-2" class="w-6 h-6 text-brand-blue"></i>
-                        </div>
-                        <p class="text-gray-700 font-semibold text-base">Fricción cero en Game Feel.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 4: El CTA Suave (Autoridad) -->
-            <div class="slide-snap flex-shrink-0 w-full bg-brand-dark rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
-                
-                <!-- Patrón sutil de fondo -->
-                <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+            <!-- Slide 3: Romper la creencia -->
+            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden bg-brand-dark">
+                <!-- Invertimos colores para impacto visual -->
+                <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
 
                 <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80 z-10">
-                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
-                    <span class="text-xs font-bold tracking-widest text-gray-300 uppercase">Ezequiel Canello</span>
+                    <i data-lucide="x-circle" class="w-5 h-5 text-white"></i>
+                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">El error novato</span>
                 </div>
 
-                <div class="mt-20 z-10">
-                    <h2 class="text-4xl font-extrabold leading-[1.1] text-white tracking-tight">Asegurá tu lanzamiento.</h2>
-                    <p class="text-gray-400 mt-6 text-lg font-medium leading-relaxed">El día de tu release debería ser para celebrar, no para dar soporte técnico.</p>
+                <div class="mt-16 z-10">
+                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-white tracking-tight">"Pero mis amigos ya lo probaron y les encantó..."</h2>
+                    
+                    <div class="mt-8 space-y-4">
+                        <p class="text-gray-300 text-lg font-medium leading-relaxed">Tus amigos te quieren. Te perdonan los errores inconscientemente.</p>
+                        <p class="text-white text-xl font-bold bg-white/10 p-4 rounded-xl border border-white/20">El yankee que pagó $15 dólares no te perdona nada.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: El Framework Simple -->
+            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
+                <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80">
+                    <i data-lucide="shield" class="w-5 h-5 text-brand-blue fill-brand-blue"></i>
+                    <span class="text-xs font-bold tracking-widest text-brand-blue uppercase">La Solución</span>
                 </div>
 
-                <div class="mb-4 z-10">
-                    <div class="border-t border-white/10 pt-6">
-                        <div class="flex items-center gap-4">
-                            <!-- Avatar placeholder simulando IG de Ezequiel -->
-                            <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-brand-blue to-purple-500 p-0.5">
-                                <div class="w-full h-full bg-brand-dark rounded-full border-2 border-brand-dark flex items-center justify-center">
-                                    <i data-lucide="user" class="w-6 h-6 text-white"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="text-white font-bold text-lg">@ezequiel.qa</p>
-                                <p class="text-brand-blue font-semibold text-sm">Seguime si sos un estudio indie.</p>
-                            </div>
+                <div class="mt-16">
+                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-brand-dark tracking-tight">Sistema LaunchGuard.</h2>
+                    <p class="text-gray-600 mt-4 font-medium">No testees. Blindá ingresos.</p>
+                </div>
+
+                <div class="mb-4 space-y-4">
+                    <div class="flex items-start gap-4">
+                        <div class="bg-brand-blue text-white rounded-full w-8 h-8 flex items-center justify-center font-bold shrink-0 mt-0.5">1</div>
+                        <p class="text-gray-800 font-bold text-lg">Fricción Cero <span class="block text-sm font-medium text-gray-500 mt-1">El jugador debe entrar en flow en 5 minutos.</span></p>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="bg-brand-blue text-white rounded-full w-8 h-8 flex items-center justify-center font-bold shrink-0 mt-0.5">2</div>
+                        <p class="text-gray-800 font-bold text-lg">Caza de Game-Breakers <span class="block text-sm font-medium text-gray-500 mt-1">Auditoría agresiva de los primeros 120 mins.</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: El CTA Manychat (El Cierre) -->
+            <div class="slide-snap flex-shrink-0 w-full bg-brand-blue rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-center text-center aspect-[4/5] relative overflow-hidden shadow-2xl">
+                
+                <div class="absolute top-0 right-0 p-8 opacity-10">
+                    <i data-lucide="message-square" class="w-48 h-48 text-white"></i>
+                </div>
+
+                <div class="z-10 flex flex-col items-center">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-xl">
+                        <i data-lucide="lock" class="w-10 h-10 text-brand-blue"></i>
+                    </div>
+                    
+                    <h2 class="text-4xl font-extrabold leading-[1.1] text-white tracking-tight mb-6">Asegurá tu facturación hoy.</h2>
+                    
+                    <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 w-full mb-8">
+                        <p class="text-white text-lg font-medium">Comentá la palabra</p>
+                        <p class="text-white text-3xl font-black tracking-widest my-2">"BLINDAJE"</p>
+                        <p class="text-white/80 text-sm">y te mando por DM mi checklist privada de Día 1.</p>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-brand-dark flex items-center justify-center border-2 border-white">
+                            <i data-lucide="user" class="w-5 h-5 text-white"></i>
                         </div>
+                        <p class="text-white font-bold text-left leading-tight">@ezequiel.qa <span class="block text-white/70 font-medium text-sm">LaunchGuard System</span></p>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- Indicadores estilo Instagram -->
-        <div class="flex justify-center items-center gap-1.5 mt-2">
+        <div class="flex justify-center items-center gap-1.5 mt-4">
             <div class="w-1.5 h-1.5 rounded-full bg-brand-blue transition-all duration-300 indicator" data-index="0"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 indicator" data-index="1"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 indicator" data-index="2"></div>
             <div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 indicator" data-index="3"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 indicator" data-index="4"></div>
         </div>
         
-        <!-- Botones Desktop (Opcional, en IG no existen, pero sirven para la demo web) -->
         <div class="hidden sm:flex justify-between absolute top-1/2 -translate-y-1/2 w-[120%] -left-[10%] pointer-events-none">
             <button id="prevBtn" class="pointer-events-auto p-3 rounded-full bg-white shadow-lg border border-gray-100 text-gray-600 hover:text-brand-blue hover:scale-110 active:scale-90 transition-all disabled:opacity-0">
                 <i data-lucide="chevron-left" class="w-6 h-6"></i>
@@ -193,16 +200,14 @@
     </div>
 
     <script>
-        // Inicializar Iconos Lucide
         lucide.createIcons();
 
-        // Lógica del Carrusel
         const carousel = document.getElementById('carousel');
         const nextBtn = document.getElementById('nextBtn');
         const prevBtn = document.getElementById('prevBtn');
         const indicators = document.querySelectorAll('.indicator');
         let currentSlide = 0;
-        const totalSlides = 4;
+        const totalSlides = 5; // Actualizado a 5 slides
 
         const updateIndicators = () => {
             indicators.forEach((ind, index) => {
@@ -215,7 +220,6 @@
                 }
             });
             
-            // Actualizar estado de botones (demo web)
             if(prevBtn && nextBtn) {
                 prevBtn.disabled = currentSlide === 0;
                 nextBtn.disabled = currentSlide === totalSlides - 1;
@@ -249,10 +253,8 @@
             });
         }
 
-        // Actualizar el índice al hacer scroll manual (swipe de celular)
         carousel.addEventListener('scroll', () => {
             const slideWidth = carousel.clientWidth;
-            // Añadimos un pequeño threshold para que el cambio de punto sea más natural en el medio del scroll
             const newIndex = Math.round(carousel.scrollLeft / slideWidth);
             if(newIndex !== currentSlide) {
                 currentSlide = newIndex;
@@ -260,7 +262,6 @@
             }
         });
 
-        // Init
         updateIndicators();
     </script>
 </body>
