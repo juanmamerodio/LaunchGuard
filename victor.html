@@ -1,512 +1,267 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reporte Confidencial Alpha | Launchguard</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Carrusel IG - LaunchGuard System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Material 3 Expressive vibe -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&family=Syne:wght@500;600;800&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Outfit', 'sans-serif'],
-                        display: ['Syne', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     },
                     colors: {
-                        m3: {
-                            base: '#08070B',
-                            surface: 'rgba(25, 24, 32, 0.6)',
-                            primary: '#B48EAD', // Soft cosmic purple
-                            accent: '#88C0D0', // Cosmic blue
-                            danger: '#BF616A',
-                            warning: '#EBCB8B',
-                            success: '#A3BE8C',
-                            glow: 'rgba(180, 142, 173, 0.15)'
-                        }
-                    },
-                    animation: {
-                        'float': 'float 8s ease-in-out infinite',
-                        'float-delayed': 'float 8s ease-in-out 4s infinite',
-                        'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0) scale(1)' },
-                            '50%': { transform: 'translateY(-20px) scale(1.05)' },
+                        brand: {
+                            blue: '#0052FF', // Azul vibrante, muy profesional y tech
+                            light: '#F8FAFC',
+                            dark: '#0F172A'
                         }
                     }
                 }
             }
         }
     </script>
-
     <style>
         body {
-            background-color: #08070B;
-            color: #E5E9F0;
-            overflow-x: hidden;
+            background-color: #F3F4F6;
+            color: #0F172A;
+        }
+        
+        /* Ocultar scrollbar pero permitir scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        /* Launchguard Signature Glassmorphism */
-        .glass-card {
-            background: rgba(30, 29, 38, 0.4);
-            backdrop-filter: blur(32px);
-            -webkit-backdrop-filter: blur(32px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 2rem; 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .ig-card {
+            background: #ffffff;
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.04);
         }
 
-        .glass-card:hover {
-            border-color: rgba(180, 142, 173, 0.25);
-            background: rgba(35, 34, 45, 0.6);
+        .slide-snap {
+            scroll-snap-align: center;
         }
-
-        .glass-card.critical:hover {
-            transform: translateY(-4px) scale(1.01);
-            border-color: rgba(191, 97, 106, 0.4);
-            box-shadow: 0 15px 45px -10px rgba(191, 97, 106, 0.15);
-        }
-
-        .glass-nav {
-            background: rgba(8, 7, 11, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .m3-button {
-            border-radius: 100px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .m3-button::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.15), transparent);
-            transform: translateX(-100%);
-            transition: 0.6s;
-        }
-
-        .m3-button:hover::after {
-            transform: translateX(100%);
-        }
-
-        .ambient-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(120px);
-            z-index: -1;
-            opacity: 0.35;
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #08070B; }
-        ::-webkit-scrollbar-thumb { background: rgba(180, 142, 173, 0.2); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(180, 142, 173, 0.5); }
     </style>
 </head>
-<body class="antialiased relative selection:bg-m3-primary selection:text-white">
+<body class="min-h-screen flex flex-col items-center justify-center font-sans p-4 sm:p-8">
 
-    <!-- Ambient Background Orbs -->
-    <div class="ambient-orb w-[40rem] h-[40rem] bg-m3-primary top-[-10%] left-[-15%] animate-pulse-slow"></div>
-    <div class="ambient-orb w-[50rem] h-[50rem] bg-m3-accent top-[35%] right-[-20%] animate-float-delayed"></div>
-    <div class="ambient-orb w-[30rem] h-[30rem] bg-m3-danger bottom-[10%] left-[5%] opacity-20 animate-float"></div>
+    <!-- Header de Contexto (Solo para la vista web, no va en IG) -->
+    <div class="max-w-md w-full mb-6 text-center">
+        <h1 class="text-xl font-bold text-gray-800">Preview: Instagram 4:5</h1>
+        <p class="text-sm text-gray-500">Deslizá para ver el carrusel</p>
+    </div>
 
-    <!-- Official Launchguard Navigation -->
-    <nav class="fixed w-full top-0 z-50 glass-nav transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-m3-primary to-m3-accent flex items-center justify-center shadow-lg shadow-m3-primary/20">
-                    <i data-lucide="shield" class="w-5 h-5 text-m3-base"></i>
-                </div>
-                <div>
-                    <h1 class="font-display font-bold text-lg tracking-wide text-white leading-none">LAUNCHGUARD</h1>
-                    <span class="text-[10px] uppercase tracking-[0.2em] text-m3-primary font-semibold">QA & Strategy</span>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-6">
-                <a href="https://launchguard.netlify.app" target="_blank" rel="noopener noreferrer" class="hidden md:flex text-sm font-medium text-white/60 hover:text-white transition-colors items-center gap-2">
-                    <i data-lucide="home" class="w-4 h-4"></i>
-                    Inicio
-                </a>
-                <div class="h-5 w-px bg-white/10 hidden md:block"></div>
-                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-m3-danger/10 border border-m3-danger/20">
-                    <div class="w-2 h-2 rounded-full bg-m3-danger animate-pulse"></div>
-                    <span class="text-xs font-semibold tracking-widest text-m3-danger uppercase">Confidencial: Alpha Build</span>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="relative z-10 px-5 pt-40 pb-24 md:px-12 max-w-7xl mx-auto">
+    <!-- Contenedor Principal del Carrusel (Simulador IG) -->
+    <div class="relative max-w-md w-full">
         
-        <!-- Hero Section -->
-        <section class="text-center mb-28 reveal active">
-            <div class="inline-flex items-center gap-2 mb-8 px-5 py-2.5 rounded-full bg-white/5 text-white/90 text-sm font-medium border border-white/10 backdrop-blur-md shadow-xl">
-                <i data-lucide="microscope" class="w-4 h-4 text-m3-accent"></i>
-                Auditoría Técnica Especializada | UE5
-            </div>
-            <h2 class="font-display text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold leading-[1.1] tracking-tight mb-8 text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">
-                Noah & The<br/>Cosmic Cleanup
-            </h2>
-            <p class="text-xl md:text-2xl text-white/60 max-w-3xl mx-auto font-light leading-relaxed">
-                El producto posee una visión artística sólida y un gamefeel base con un potencial extraordinario. <br><br>
-                <span class="text-white/90 font-medium">Nuestro análisis ha identificado 21 fricciones sistémicas en la arquitectura actual que, de no ser tratadas, podrían impactar negativamente la retención del jugador durante el Early Access.</span>
-            </p>
-        </section>
-
-        <!-- Launchguard Methodology & Strengths -->
-        <section class="mb-32 reveal">
-            <div class="grid md:grid-cols-12 gap-8">
-                <!-- Methodology -->
-                <div class="md:col-span-5 glass-card p-10 flex flex-col justify-center bg-gradient-to-br from-m3-surface to-m3-base">
-                    <h3 class="text-xs font-bold uppercase tracking-widest text-m3-accent mb-4">Metodología Launchguard</h3>
-                    <h4 class="font-display text-3xl font-bold text-white mb-6">Prueba de Estrés: 120 Minutos</h4>
-                    <p class="text-white/60 leading-relaxed mb-6">
-                        Simulamos la ventana crítica de reembolso de Steam. El objetivo no es solo encontrar bugs aislados, sino mapear cómo los sistemas interactúan entre sí y generan puntos de frustración que quiebran la inmersión del jugador promedio.
-                    </p>
-                    <ul class="space-y-3 text-sm text-white/80">
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-m3-success"></i> Análisis de Sistemas de Input</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-m3-success"></i> Monitoreo de Canales de Audio</li>
-                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-m3-success"></i> Evaluación de Core Gameplay</li>
-                    </ul>
-                </div>
-
-                <!-- Product Strengths (Ego Protection / Honest Praise) -->
-                <div class="md:col-span-7 glass-card p-10 border-m3-success/20">
-                    <h3 class="text-xs font-bold uppercase tracking-widest text-m3-success mb-4">Diagnóstico Positivo</h3>
-                    <h4 class="font-display text-3xl font-bold text-white mb-8">Bases Sólidas del Proyecto</h4>
-                    <div class="grid sm:grid-cols-2 gap-8">
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-m3-success/10 flex items-center justify-center mb-4">
-                                <i data-lucide="brush" class="text-m3-success w-5 h-5"></i>
-                            </div>
-                            <h5 class="font-bold text-lg mb-2">Identidad Visual</h5>
-                            <p class="text-white/50 text-sm">El mundo transmite una atmósfera única e inmersiva desde el primer minuto. La dirección de arte en UE5 es altamente competitiva para una etapa Alpha.</p>
-                        </div>
-                        <div>
-                            <div class="w-10 h-10 rounded-lg bg-m3-success/10 flex items-center justify-center mb-4">
-                                <i data-lucide="layout" class="text-m3-success w-5 h-5"></i>
-                            </div>
-                            <h5 class="font-bold text-lg mb-2">Diseño de HUD</h5>
-                            <p class="text-white/50 text-sm">La interfaz es limpia, intuitiva y no intrusiva, permitiendo al usuario enfocarse puramente en el entorno y la resolución de puzzles.</p>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <div class="w-10 h-10 rounded-lg bg-m3-success/10 flex items-center justify-center mb-4">
-                                <i data-lucide="zap" class="text-m3-success w-5 h-5"></i>
-                            </div>
-                            <h5 class="font-bold text-lg mb-2">Cinemática y Movimiento Base</h5>
-                            <p class="text-white/50 text-sm">El "peso" del personaje, la inercia y el salto base demuestran un trabajo cuidado, cimentando un gamefeel con un techo muy alto.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Divider -->
-        <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-32"></div>
-
-        <!-- SECTION: AUDIO ARCHITECTURE -->
-        <section class="mb-32 reveal">
-            <div class="flex items-center gap-5 mb-12">
-                <div class="w-14 h-14 rounded-2xl bg-m3-danger/10 flex items-center justify-center text-m3-danger border border-m3-danger/20 shadow-[0_0_30px_rgba(191,97,106,0.2)]">
-                    <i data-lucide="waves" class="w-7 h-7"></i>
-                </div>
-                <div>
-                    <h2 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight">Arquitectura de Audio</h2>
-                    <p class="text-m3-danger mt-2 font-medium tracking-wide">Área de Atención Prioritaria</p>
-                </div>
-            </div>
-
-            <div class="grid lg:grid-cols-2 gap-6">
-                <!-- Critical Issue -->
-                <div class="glass-card critical p-10 border-m3-danger/30 relative overflow-hidden group lg:col-span-2">
-                    <div class="absolute inset-0 bg-gradient-to-br from-m3-danger/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="flex flex-col md:flex-row gap-8 relative z-10">
-                        <div class="shrink-0 md:w-1/3">
-                            <span class="inline-flex px-3 py-1.5 text-xs font-bold uppercase tracking-wider rounded-full bg-m3-danger/20 text-m3-danger mb-4 shadow-sm">Impacto Severo</span>
-                            <h3 class="text-2xl font-bold text-white mb-3">Independencia de Canales de Sonido</h3>
-                            <p class="text-m3-danger/80 text-sm font-semibold flex items-center gap-2">
-                                <i data-lucide="alert-triangle" class="w-4 h-4"></i> Riesgo Alto de Abandono
-                            </p>
-                        </div>
-                        <div class="flex-1 border-l border-white/10 pl-0 md:pl-8">
-                            <p class="text-white/70 mb-4 leading-relaxed text-lg">
-                                Se ha detectado una desvinculación entre ciertos canales de audio (ej. efectos metálicos persistentes) y el controlador maestro de volumen. Estos sonidos se ejecutan en un bucle ininterrumpido que ignora las preferencias del usuario.
-                            </p>
-                            <p class="text-white/50 text-sm">
-                                <strong>Diagnóstico:</strong> Afecta drásticamente la inmersión y la comodidad auditiva. Los usuarios sensibles al sonido suelen percibir esto como un "bloqueador" para continuar la partida.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Medium Issues -->
-                <div class="glass-card p-8 flex flex-col justify-between border-white/5">
-                    <div>
-                        <span class="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 mb-4">Impacto Moderado</span>
-                        <h3 class="text-xl font-bold text-white mb-3">Aislamiento de Capas Menores</h3>
-                        <p class="text-white/60 text-sm leading-relaxed mb-4">Los efectos de pasos y respiración del personaje continúan reproduciéndose incluso cuando el volumen general se establece en 0 o la aplicación se minimiza.</p>
-                    </div>
-                    <p class="text-orange-400/80 text-xs font-medium">► Implicancia: Reduce la confiabilidad del menú de configuraciones frente al usuario.</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col justify-between border-white/5">
-                    <div>
-                        <span class="inline-block px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full bg-orange-500/10 text-orange-400 border border-orange-500/20 mb-4">Impacto Moderado</span>
-                        <h3 class="text-xl font-bold text-white mb-3">Rango Dinámico Desbalanceado</h3>
-                        <p class="text-white/60 text-sm leading-relaxed mb-4">Existe una disparidad pronunciada de decibelios entre diferentes acciones (recolección vs ambiente). Con el volumen al 40%, ciertos efectos resultan excesivamente estridentes mientras otros son inaudibles.</p>
-                    </div>
-                    <p class="text-orange-400/80 text-xs font-medium">► Implicancia: Genera fatiga auditiva prematura.</p>
-                </div>
-
-                <div class="glass-card p-8 lg:col-span-2 border-white/5 bg-white/[0.02]">
-                    <div class="flex items-start gap-4">
-                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 mt-1">
-                            <i data-lucide="info" class="w-4 h-4 text-white/40"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-bold text-white mb-2">Gestión de la Pista Ambiental</h3>
-                            <p class="text-white/60 text-sm leading-relaxed">Tras periodos prolongados, el flujo de la banda sonora ambiental se interrumpe y no reinicia su ciclo hasta que se dispara un evento de daño en el jugador, generando espacios prolongados de silencio no intencionado.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION: INPUTS & CONTROLS -->
-        <section class="mb-32 reveal">
-            <div class="flex items-center gap-5 mb-12">
-                <div class="w-14 h-14 rounded-2xl bg-m3-accent/10 flex items-center justify-center text-m3-accent border border-m3-accent/20 shadow-[0_0_30px_rgba(136,192,208,0.2)]">
-                    <i data-lucide="gamepad-2" class="w-7 h-7"></i>
-                </div>
-                <div>
-                    <h2 class="font-display text-4xl md:text-5xl font-bold text-white tracking-tight">Sistemas de Input & Control</h2>
-                    <p class="text-m3-accent mt-2 font-medium tracking-wide">Resolución de Fricciones Clave</p>
-                </div>
-            </div>
+        <!-- Carrusel -->
+        <div id="carousel" class="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 pb-4 pt-2 scroll-smooth">
             
-            <div class="space-y-6">
-                <!-- Critical 1 -->
-                <div class="glass-card critical p-8 md:p-10 border-m3-danger/30 flex flex-col md:flex-row gap-8 items-start">
-                    <div class="md:w-1/3">
-                        <span class="inline-block px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-m3-danger/10 text-m3-danger border border-m3-danger/20 mb-3">Fricción Mayor</span>
-                        <h3 class="text-2xl font-bold text-white leading-tight">Interrupción de Flujo de Juego vía Tabulador</h3>
-                    </div>
-                    <div class="md:w-2/3 md:border-l border-white/10 md:pl-8">
-                        <p class="text-white/70 text-base leading-relaxed mb-4">La apertura del menú de selección radial de gadgets (Tabulador) pausa por completo el estado del mundo (Time Dilation = 0 o equivalente), afectando tanto al jugador como a las entidades hostiles.</p>
-                        <p class="text-m3-danger text-sm font-medium">► Oportunidad de Mejora: Evitar que esta mecánica sea utilizada como un "exploit" para pausar el combate y evadir daño inminente, preservando el desafío.</p>
-                    </div>
+            <!-- Slide 1: El Gancho -->
+            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden group">
+                <!-- Watermark discreta -->
+                <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
+                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">LaunchGuard</span>
                 </div>
 
-                <!-- Critical 2 -->
-                <div class="glass-card critical p-8 md:p-10 border-m3-danger/30 flex flex-col md:flex-row gap-8 items-start">
-                    <div class="md:w-1/3">
-                        <span class="inline-block px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-full bg-m3-danger/10 text-m3-danger border border-m3-danger/20 mb-3">Fricción Mayor</span>
-                        <h3 class="text-2xl font-bold text-white leading-tight">Inconsistencia en Lógica de Interacción</h3>
-                    </div>
-                    <div class="md:w-2/3 md:border-l border-white/10 md:pl-8">
-                        <p class="text-white/70 text-base leading-relaxed mb-4">Falta de estandarización en los mapeos de interacción. Mientras la acción principal se realiza con 'E', mecánicas específicas (ej. trampas) requieren 'Click Derecho' sin indicadores en pantalla, lo que genera fallos silenciosos al usar 'E'.</p>
-                        <p class="text-m3-danger text-sm font-medium">► Oportunidad de Mejora: Unificar el esquema de inputs para prevenir la sensación de que "el control no responde".</p>
-                    </div>
+                <div class="mt-16">
+                    <span class="text-brand-blue font-bold tracking-widest text-xs uppercase mb-3 block">La mentira del Indie Dev</span>
+                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-brand-dark tracking-tight">"Mis amigos ya testearon el juego, estamos listos para lanzar."</h2>
                 </div>
 
-                <!-- Grid of Medium/Low -->
-                <div class="grid md:grid-cols-2 gap-6">
-                    <div class="glass-card p-8">
-                        <h3 class="text-xl font-bold text-white mb-3">Accesibilidad en Teclado y Ratón</h3>
-                        <p class="text-white/60 text-sm leading-relaxed mb-4">El menú radial exige uso del mouse para re-equipar el estado base (centro). No existe un atajo o lógica fluida orientada exclusivamente a usuarios de teclado.</p>
-                    </div>
-                    <div class="glass-card p-8">
-                        <h3 class="text-xl font-bold text-white mb-3">Sobrecarga del Botón de Acción</h3>
-                        <p class="text-white/60 text-sm leading-relaxed mb-4">Las acciones de "Diálogo con NPC" y "Ataque/Destrucción" comparten input. La proximidad de ambos elementos genera superposición de prioridades y acciones erróneas.</p>
-                    </div>
-                    <div class="glass-card p-8">
-                        <h3 class="text-xl font-bold text-white mb-3">Optimización del Menú de Controles</h3>
-                        <p class="text-white/60 text-sm leading-relaxed mb-4">El panel actual presenta sobrecarga cognitiva: excesivas opciones redundantes y omisión de mapeos vitales, dificultando su uso como guía de referencia rápida.</p>
-                    </div>
-                    <div class="glass-card p-8">
-                        <h3 class="text-xl font-bold text-white mb-3">Eventos de Movimiento No Mapeados</h3>
-                        <p class="text-white/60 text-sm leading-relaxed mb-4">Se detectó una acción de teletransporte vinculada a la tecla 'R' que carece de patrón predecible, acompañada de un evento de mouse secundario que consume recursos inesperadamente.</p>
-                    </div>
+                <div class="mb-4">
+                    <p class="text-gray-500 text-xl font-medium leading-relaxed">La frase exacta que antecede a un desastre financiero en Steam.</p>
                 </div>
-            </div>
-        </section>
-
-        <!-- CATEGORY 3: CORE, UI & GAMEFEEL -->
-        <section class="mb-32 reveal">
-            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-12 text-center border-t border-white/5 pt-16">
-                Sistemas Core & Diseño de Interacción
-            </h2>
-            
-            <!-- High Impact Core -->
-            <div class="glass-card critical p-12 mb-10 border-m3-danger/30 relative overflow-hidden bg-gradient-to-b from-m3-surface to-[rgba(191,97,106,0.05)]">
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-m3-danger/5 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 text-center max-w-3xl mx-auto">
-                    <span class="inline-flex px-4 py-1.5 text-xs font-bold uppercase tracking-widest rounded-full bg-m3-danger/10 text-m3-danger border border-m3-danger/20 mb-6">Desafío Estructural</span>
-                    <h3 class="text-3xl md:text-4xl font-bold text-white mb-6">Desbalance en el Sistema de Trampas</h3>
-                    <p class="text-white/70 text-lg leading-relaxed mb-6">
-                        La mecánica central de gadgets presenta comportamientos anómalos en el entorno físico (flotabilidad inconsistente, traspaso de colisiones de terreno) y carece de un sistema de coste/economía, permitiendo su uso infinito.
-                    </p>
-                    <div class="inline-block bg-white/5 px-6 py-3 rounded-xl border border-white/10">
-                        <p class="text-white/90 text-sm font-medium">Consecuencia: Este comportamiento trivializa el diseño de niveles (Level Design) y la curva de dificultad proyectada para el juego completo.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- UI UX & Gamefeel Masonry -->
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-m3-warning/50">
-                    <h3 class="font-bold text-lg mb-3 text-white">Ausencia de Feedback Háptico/Visual</h3>
-                    <p class="text-white/60 text-sm leading-relaxed mb-4 flex-grow">La transición entre los diferentes modos de gadgets no emite una respuesta en pantalla, animación en el modelo del personaje o confirmación auditiva.</p>
-                    <p class="text-m3-warning text-xs font-semibold">Impacto: Pérdida de consciencia situacional del jugador.</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-m3-warning/50">
-                    <h3 class="font-bold text-lg mb-3 text-white">Curva de Onboarding Abrupta</h3>
-                    <p class="text-white/60 text-sm leading-relaxed mb-4 flex-grow">Falta de introducción sistemática a las mecánicas complejas (jetpack, rotación de gadgets). El jugador es posicionado en un entorno de alta demanda técnica de forma inmediata.</p>
-                    <p class="text-m3-warning text-xs font-semibold">Impacto: Posible alta tasa de rebote inicial.</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-m3-accent/50">
-                    <h3 class="font-bold text-lg mb-3 text-white">Precisión de Cajas de Colisión (Hitboxes)</h3>
-                    <p class="text-white/60 text-sm leading-relaxed mb-4 flex-grow">Los volúmenes de colisión de ciertos assets ambientales (troncos) y entidades (NPCs) exceden sus mallas visuales, provocando interacciones prematuras ("golpes fantasma").</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-m3-accent/50">
-                    <h3 class="font-bold text-lg mb-3 text-white">Oclusión de Cámara en Combate</h3>
-                    <p class="text-white/60 text-sm leading-relaxed mb-4 flex-grow">Durante interacciones de proximidad, la cámara tiende a penetrar la geometría de los personajes, obstruyendo el campo visual del jugador temporalmente.</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-m3-accent/50">
-                    <h3 class="font-bold text-lg mb-3 text-white">Físicas Acumulativas (Bunny-Hop)</h3>
-                    <p class="text-white/60 text-sm leading-relaxed mb-4 flex-grow">La concatenación de saltos continuos genera multiplicadores físicos impredecibles, alterando la altura máxima y velocidad de desplazamiento proyectadas.</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-white/20">
-                    <h3 class="font-bold text-lg mb-3 text-white">Sistemas de Estado del Personaje</h3>
-                    <p class="text-white/60 text-sm leading-relaxed flex-grow">Se observó una animación de fatiga que actualmente funciona solo a nivel cosmético, sin impactar variables reales de gameplay (stamina o velocidad), generando ambigüedad en las reglas del juego.</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-white/20">
-                    <h3 class="font-bold text-lg mb-3 text-white">Rigidez en Assets Interactivos</h3>
-                    <p class="text-white/60 text-sm leading-relaxed flex-grow">Las cajas dinámicas están restringidas únicamente al evento de destrucción. La imposibilidad de desplazamiento físico limita la profundidad de los puzzles ambientales futuros.</p>
-                </div>
-
-                <div class="glass-card p-8 flex flex-col h-full border-t-2 border-t-white/20 lg:col-span-2">
-                    <h3 class="font-bold text-lg mb-3 text-white">Pulido Visual y de Interfaz</h3>
-                    <p class="text-white/60 text-sm leading-relaxed">Áreas menores de optimización: Desconexión estética en el fondo del menú de opciones, latencia en la actualización visual de los sliders de audio, y renderizado fragmentado en la simulación de movimiento de follaje (césped).</p>
+                <!-- Hint to swipe -->
+                <div class="absolute right-6 bottom-6 animate-pulse text-gray-300">
+                    <i data-lucide="arrow-right" class="w-6 h-6"></i>
                 </div>
             </div>
-        </section>
 
-        <!-- CTA Section (The Launchguard Pitch) -->
-        <section class="reveal relative z-20 mt-40">
-            <div class="glass-card p-12 md:p-20 text-center bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')] relative overflow-hidden border-m3-primary/30">
-                <div class="absolute inset-0 bg-gradient-to-t from-m3-base via-m3-primary/5 to-transparent"></div>
+            <!-- Slide 2: El Dolor -->
+            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
+                <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
+                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">LaunchGuard</span>
+                </div>
+
+                <div class="mt-16">
+                    <span class="text-red-500 font-bold tracking-widest text-xs uppercase mb-3 block">El problema real</span>
+                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-brand-dark tracking-tight">Ceguera de Taller.</h2>
+                    <p class="text-gray-600 mt-6 text-lg font-medium leading-relaxed">Tu equipo ya sabe cómo esquivar los bugs de forma inconsciente. <br><br>Los jugadores nuevos no.</p>
+                </div>
+
+                <div class="mb-4 bg-gray-50 border border-gray-100 rounded-2xl p-5">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="alert-circle" class="w-6 h-6 text-red-500 shrink-0 mt-0.5"></i>
+                        <p class="text-gray-800 font-semibold text-base">Steam no perdona: 1 bug crítico en los primeros 120 minutos = Reembolso automático.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: El Paradigma -->
+            <div class="slide-snap flex-shrink-0 w-full ig-card rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
+                <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
+                    <span class="text-xs font-bold tracking-widest text-gray-400 uppercase">LaunchGuard</span>
+                </div>
+
+                <div class="mt-16">
+                    <span class="text-brand-blue font-bold tracking-widest text-xs uppercase mb-3 block">El Cambio</span>
+                    <h2 class="text-4xl font-extrabold mt-2 leading-[1.1] text-brand-dark tracking-tight">No necesitás "testers".<br>Necesitás blindar tus ingresos.</h2>
+                </div>
+
+                <div class="mb-4 space-y-5">
+                    <div class="flex items-center gap-4 bg-white shadow-sm border border-gray-50 p-4 rounded-xl">
+                        <div class="bg-brand-blue/10 p-2 rounded-lg">
+                            <i data-lucide="search" class="w-6 h-6 text-brand-blue"></i>
+                        </div>
+                        <p class="text-gray-700 font-semibold text-base">Auditoría agresiva Día 1.</p>
+                    </div>
+                    <div class="flex items-center gap-4 bg-white shadow-sm border border-gray-50 p-4 rounded-xl">
+                        <div class="bg-brand-blue/10 p-2 rounded-lg">
+                            <i data-lucide="gamepad-2" class="w-6 h-6 text-brand-blue"></i>
+                        </div>
+                        <p class="text-gray-700 font-semibold text-base">Fricción cero en Game Feel.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: El CTA Suave (Autoridad) -->
+            <div class="slide-snap flex-shrink-0 w-full bg-brand-dark rounded-none sm:rounded-2xl p-8 sm:p-10 flex flex-col justify-between aspect-[4/5] relative overflow-hidden">
                 
-                <div class="relative z-10">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-m3-primary to-m3-accent mx-auto mb-8 flex items-center justify-center shadow-lg shadow-m3-primary/30">
-                        <i data-lucide="rocket" class="w-8 h-8 text-m3-base"></i>
+                <!-- Patrón sutil de fondo -->
+                <div class="absolute inset-0 opacity-5" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+
+                <div class="absolute top-6 left-8 flex items-center gap-2 opacity-80 z-10">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-brand-blue"></i>
+                    <span class="text-xs font-bold tracking-widest text-gray-300 uppercase">Ezequiel Canello</span>
+                </div>
+
+                <div class="mt-20 z-10">
+                    <h2 class="text-4xl font-extrabold leading-[1.1] text-white tracking-tight">Asegurá tu lanzamiento.</h2>
+                    <p class="text-gray-400 mt-6 text-lg font-medium leading-relaxed">El día de tu release debería ser para celebrar, no para dar soporte técnico.</p>
+                </div>
+
+                <div class="mb-4 z-10">
+                    <div class="border-t border-white/10 pt-6">
+                        <div class="flex items-center gap-4">
+                            <!-- Avatar placeholder simulando IG de Ezequiel -->
+                            <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-brand-blue to-purple-500 p-0.5">
+                                <div class="w-full h-full bg-brand-dark rounded-full border-2 border-brand-dark flex items-center justify-center">
+                                    <i data-lucide="user" class="w-6 h-6 text-white"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-white font-bold text-lg">@ezequiel.qa</p>
+                                <p class="text-brand-blue font-semibold text-sm">Seguime si sos un estudio indie.</p>
+                            </div>
+                        </div>
                     </div>
-                    <h2 class="font-display text-4xl md:text-6xl font-extrabold mb-6">Protegemos tu visión creativa.</h2>
-                    <p class="text-xl text-white/70 max-w-3xl mx-auto mb-12 leading-relaxed">
-                        Conocer la ubicación de las fricciones es solo la fase de diagnóstico. Desde <strong>Launchguard</strong> hemos diseñado un plan de acción técnica estructurado para resolver estos 21 puntos sin requerir una refactorización completa de tu código en Unreal Engine 5.
-                    </p>
-                    
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
-                        <a href="mailto:ezcanelli@gmail.com?subject=Revisión%20Auditoría%20Estratégica%20-%20Noah%20&%20The%20Cosmic%20Cleanup" 
-                           class="m3-button bg-white text-m3-base font-bold text-lg px-10 py-5 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_60px_rgba(180,142,173,0.4)] transform hover:-translate-y-1 inline-flex items-center gap-3 w-full sm:w-auto justify-center">
-                            Agendar Sesión de Soluciones
-                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                        </a>
-                        <a href="https://launchguard.netlify.app" target="_blank" rel="noopener noreferrer"
-                           class="px-10 py-5 rounded-full border border-white/20 text-white font-semibold hover:bg-white/5 transition-all w-full sm:w-auto text-center">
-                            Conocer más sobre Launchguard
-                        </a>
-                    </div>
-                    <p class="mt-8 text-sm text-white/40 flex items-center justify-center gap-2">
-                        <i data-lucide="shield-check" class="w-4 h-4 text-m3-success"></i> Llamada estratégica de 15 minutos, sin compromiso comercial inicial.
-                    </p>
                 </div>
             </div>
-        </section>
 
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-white/10 py-10 mt-12 relative z-10 glass-nav">
-        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-                <i data-lucide="shield" class="w-5 h-5 text-white/30"></i>
-                <span class="text-white/30 font-display font-bold tracking-widest text-sm">LAUNCHGUARD</span>
-            </div>
-            <div class="text-center md:text-right text-white/40 text-sm">
-                <p>Auditoría Técnica Exclusiva elaborada por <a href="mailto:ezcanelli@gmail.com" class="text-white/70 hover:text-m3-primary transition-colors">Ezequiel Canello</a>.</p>
-                <p class="mt-1 text-xs">Desarrollado bajo estrictos acuerdos de confidencialidad.</p>
-            </div>
         </div>
-    </footer>
+
+        <!-- Indicadores estilo Instagram -->
+        <div class="flex justify-center items-center gap-1.5 mt-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-brand-blue transition-all duration-300 indicator" data-index="0"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 indicator" data-index="1"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 indicator" data-index="2"></div>
+            <div class="w-1.5 h-1.5 rounded-full bg-gray-300 transition-all duration-300 indicator" data-index="3"></div>
+        </div>
+        
+        <!-- Botones Desktop (Opcional, en IG no existen, pero sirven para la demo web) -->
+        <div class="hidden sm:flex justify-between absolute top-1/2 -translate-y-1/2 w-[120%] -left-[10%] pointer-events-none">
+            <button id="prevBtn" class="pointer-events-auto p-3 rounded-full bg-white shadow-lg border border-gray-100 text-gray-600 hover:text-brand-blue hover:scale-110 active:scale-90 transition-all disabled:opacity-0">
+                <i data-lucide="chevron-left" class="w-6 h-6"></i>
+            </button>
+            <button id="nextBtn" class="pointer-events-auto p-3 rounded-full bg-white shadow-lg border border-gray-100 text-gray-600 hover:text-brand-blue hover:scale-110 active:scale-90 transition-all disabled:opacity-0">
+                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
 
     <script>
+        // Inicializar Iconos Lucide
         lucide.createIcons();
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const reveals = document.querySelectorAll('.reveal');
-            const revealOnScroll = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, {
-                root: null, threshold: 0.1, rootMargin: "0px 0px -50px 0px"
-            });
+        // Lógica del Carrusel
+        const carousel = document.getElementById('carousel');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const indicators = document.querySelectorAll('.indicator');
+        let currentSlide = 0;
+        const totalSlides = 4;
 
-            reveals.forEach(reveal => revealOnScroll.observe(reveal));
-            
-            // Header transparency logic
-            const nav = document.querySelector('nav');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    nav.style.background = 'rgba(8, 7, 11, 0.95)';
-                    nav.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+        const updateIndicators = () => {
+            indicators.forEach((ind, index) => {
+                if (index === currentSlide) {
+                    ind.classList.remove('bg-gray-300');
+                    ind.classList.add('bg-brand-blue');
                 } else {
-                    nav.style.background = 'rgba(8, 7, 11, 0.8)';
-                    nav.style.borderBottom = '1px solid rgba(255, 255, 255, 0.05)';
+                    ind.classList.remove('bg-brand-blue');
+                    ind.classList.add('bg-gray-300');
                 }
             });
+            
+            // Actualizar estado de botones (demo web)
+            if(prevBtn && nextBtn) {
+                prevBtn.disabled = currentSlide === 0;
+                nextBtn.disabled = currentSlide === totalSlides - 1;
+            }
+        };
+
+        const updateCarousel = () => {
+            const slideWidth = carousel.clientWidth;
+            carousel.scrollTo({
+                left: currentSlide * slideWidth,
+                behavior: 'smooth'
+            });
+            updateIndicators();
+        };
+
+        if(nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (currentSlide < totalSlides - 1) {
+                    currentSlide++;
+                    updateCarousel();
+                }
+            });
+        }
+
+        if(prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    updateCarousel();
+                }
+            });
+        }
+
+        // Actualizar el índice al hacer scroll manual (swipe de celular)
+        carousel.addEventListener('scroll', () => {
+            const slideWidth = carousel.clientWidth;
+            // Añadimos un pequeño threshold para que el cambio de punto sea más natural en el medio del scroll
+            const newIndex = Math.round(carousel.scrollLeft / slideWidth);
+            if(newIndex !== currentSlide) {
+                currentSlide = newIndex;
+                updateIndicators();
+            }
         });
+
+        // Init
+        updateIndicators();
     </script>
 </body>
 </html>
