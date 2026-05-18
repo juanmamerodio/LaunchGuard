@@ -3,232 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrusel de Autoridad - E.C. Delta</title>
+    <title>Carrusel Instagram - QA Panic</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            dark: '#0A0A0B',
-                            card: '#141417',
-                            accent: '#4F46E5', // Indigo vibrante
-                            glow: '#818CF8'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body {
-            background-color: #0A0A0B;
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.1) 0, transparent 50%), 
-                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.1) 0, transparent 50%);
-            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            background-color: #121212;
+            color: white;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
         }
-        
-        /* Ocultar scrollbar pero permitir scroll */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
+        /* Proporción 4:5 para Instagram */
+        .slide {
+            width: 400px;
+            height: 500px;
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid #27272a;
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-
-        .glass-card {
-            background: rgba(20, 20, 23, 0.6);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-
-        .slide-snap {
-            scroll-snap-align: center;
+        .crt-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center font-sans p-4 sm:p-8">
+<body>
 
-    <!-- Header de Autoridad -->
-    <div class="max-w-md w-full mb-8 text-center">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/20 border border-brand-accent/30 text-brand-glow text-sm font-semibold mb-4">
-            <i data-lucide="shield-check" class="w-4 h-4"></i>
-            LaunchGuard System
-        </div>
-        <h1 class="text-2xl font-extrabold tracking-tight">Rompiendo la matrix del Indie Dev</h1>
-    </div>
-
-    <!-- Contenedor Principal del Carrusel -->
-    <div class="relative max-w-md w-full">
+    <!-- SLIDE 1: El Gancho -->
+    <div class="slide bg-zinc-900 flex flex-col justify-end">
+        <div class="crt-overlay"></div>
+        <!-- Simulación de imagen del dev llorando con fondo de steam -->
+        <div class="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-40 grayscale"></div>
         
-        <!-- Carrusel -->
-        <div id="carousel" class="flex overflow-x-auto no-scrollbar snap-x snap-mandatory gap-4 pb-8 pt-4 scroll-smooth">
-            
-            <!-- Slide 1: El Gancho (Romper Creencia) -->
-            <div class="slide-snap flex-shrink-0 w-full glass-card rounded-[2rem] p-8 flex flex-col justify-between aspect-[4/5] relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <i data-lucide="users" class="w-32 h-32 text-white"></i>
-                </div>
-                <div>
-                    <span class="text-brand-glow font-bold tracking-wider text-sm uppercase">La Mentira</span>
-                    <h2 class="text-3xl font-extrabold mt-4 leading-tight">"Mis amigos y mi equipo ya testearon el juego, estamos listos para lanzar."</h2>
-                </div>
-                <div class="mt-8">
-                    <p class="text-gray-400 text-lg">Esta es la frase exacta que antecede a un desastre financiero en Steam.</p>
-                </div>
+        <!-- UI Noticiero -->
+        <div class="relative z-10 w-full">
+            <div class="bg-red-700 text-white font-black px-4 py-2 text-xl tracking-tighter uppercase flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-white animate-pulse"></span>
+                Urgente
             </div>
-
-            <!-- Slide 2: El Dolor (La Ecuación de Pérdida) -->
-            <div class="slide-snap flex-shrink-0 w-full glass-card rounded-[2rem] p-8 flex flex-col justify-between aspect-[4/5] relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <i data-lucide="trending-down" class="w-32 h-32 text-red-500"></i>
-                </div>
-                <div>
-                    <span class="text-red-400 font-bold tracking-wider text-sm uppercase">El Problema</span>
-                    <h2 class="text-3xl font-extrabold mt-4 leading-tight">Ceguera de Taller.</h2>
-                    <p class="text-gray-300 mt-4 text-lg">Tu equipo ya sabe cómo esquivar los bugs inconscientemente. Los jugadores nuevos no.</p>
-                </div>
-                <div class="mt-8 bg-red-500/10 border border-red-500/20 rounded-2xl p-4">
-                    <p class="text-red-200 font-semibold"><i data-lucide="alert-triangle" class="w-5 h-5 inline mr-1 -mt-1"></i> Steam no perdona: 1 bug crítico en los primeros 120 minutos = Reembolso automático.</p>
-                </div>
+            <div class="bg-white text-black p-5 border-b-8 border-red-700">
+                <h1 class="font-black text-3xl leading-tight tracking-tight uppercase">Estudio indie quiebra y su dev se larga a llorar en pleno streaming.</h1>
             </div>
-
-            <!-- Slide 3: El Cambio de Paradigma -->
-            <div class="slide-snap flex-shrink-0 w-full glass-card rounded-[2rem] p-8 flex flex-col justify-between aspect-[4/5] relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <i data-lucide="crosshair" class="w-32 h-32 text-white"></i>
-                </div>
-                <div>
-                    <span class="text-brand-glow font-bold tracking-wider text-sm uppercase">El Paradigma Delta</span>
-                    <h2 class="text-3xl font-extrabold mt-4 leading-tight">No necesitás "Testers". Necesitás Blindaje de Ingresos.</h2>
-                </div>
-                <div class="mt-8 space-y-4">
-                    <div class="flex items-start gap-3">
-                        <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-glow shrink-0"></i>
-                        <p class="text-gray-300">Auditoría agresiva de la experiencia Día 1.</p>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <i data-lucide="check-circle-2" class="w-6 h-6 text-brand-glow shrink-0"></i>
-                        <p class="text-gray-300">Eliminación de la fricción del "Game Feel".</p>
-                    </div>
-                </div>
+            <div class="bg-black text-zinc-400 text-xs px-4 py-2 font-mono flex justify-between">
+                <span>EN VIVO // TWITCH</span>
+                <span>[AUDIO SUBTITULADO]</span>
             </div>
-
-            <!-- Slide 4: Oferta Irresistible (Hormozi Style) -->
-            <div class="slide-snap flex-shrink-0 w-full bg-gradient-to-br from-brand-accent to-purple-700 rounded-[2rem] p-8 flex flex-col justify-between aspect-[4/5] relative overflow-hidden shadow-[0_0_40px_rgba(79,70,229,0.3)]">
-                <div class="absolute -right-10 -top-10 opacity-20">
-                    <i data-lucide="zap" class="w-64 h-64 text-white"></i>
-                </div>
-                <div class="z-10">
-                    <span class="bg-white/20 px-3 py-1 rounded-full text-white font-bold tracking-wider text-xs uppercase backdrop-blur-md">Garantía Inquebrantable</span>
-                    <h2 class="text-4xl font-extrabold mt-6 leading-tight text-white">Soy Ezequiel Canello.</h2>
-                    <p class="text-indigo-100 mt-4 text-lg font-medium">Si en la primera semana no encuentro al menos 3 fallos críticos que hundirían tu reseña en Steam...</p>
-                </div>
-                <div class="z-10">
-                    <p class="text-2xl font-bold text-white mb-6">La optimización de Game Feel corre por mi cuenta.</p>
-                    <button class="w-full bg-white text-brand-dark font-bold text-lg py-4 rounded-xl shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex justify-center items-center gap-2">
-                        Blindar mi lanzamiento <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Controles de Navegación -->
-        <div class="flex justify-center items-center gap-6 mt-2">
-            <button id="prevBtn" class="p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all disabled:opacity-30">
-                <i data-lucide="chevron-left" class="w-6 h-6"></i>
-            </button>
-            
-            <!-- Indicadores -->
-            <div class="flex gap-2" id="indicators">
-                <div class="w-2 h-2 rounded-full bg-brand-accent transition-all duration-300" data-index="0"></div>
-                <div class="w-2 h-2 rounded-full bg-white/20 transition-all duration-300" data-index="1"></div>
-                <div class="w-2 h-2 rounded-full bg-white/20 transition-all duration-300" data-index="2"></div>
-                <div class="w-2 h-2 rounded-full bg-white/20 transition-all duration-300" data-index="3"></div>
-            </div>
-
-            <button id="nextBtn" class="p-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/20 active:scale-90 transition-all disabled:opacity-30">
-                <i data-lucide="chevron-right" class="w-6 h-6"></i>
-            </button>
         </div>
     </div>
 
-    <script>
-        // Inicializar Iconos Lucide
-        lucide.createIcons();
+    <!-- SLIDE 2: La Confesión -->
+    <div class="slide bg-black flex flex-col justify-center p-8">
+        <svg class="w-16 h-16 text-red-600 mb-6 opacity-50" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+        
+        <p class="text-2xl font-bold leading-snug mb-6">
+            "<span class="text-red-500">Teníamos 70 errores reportados...</span> y no quise gastar en QA".
+        </p>
+        <p class="text-2xl font-bold leading-snug text-zinc-400 mb-8">
+            "Le dije a un amigo que lo jugara... me dijo que estaba bien".
+        </p>
+        
+        <div class="mt-auto border-t border-zinc-800 pt-4">
+            <p class="text-sm font-mono text-zinc-500">— El desarrollador, minutos antes de cerrar el estudio.</p>
+        </div>
+    </div>
 
-        // Lógica del Carrusel
-        const carousel = document.getElementById('carousel');
-        const nextBtn = document.getElementById('nextBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const indicators = document.querySelectorAll('#indicators div');
-        let currentSlide = 0;
-        const totalSlides = 4;
+    <!-- SLIDE 3: La Realidad -->
+    <div class="slide bg-zinc-950 flex flex-col items-center justify-center p-8 relative">
+        <!-- Gráfico cayendo de fondo -->
+        <div class="absolute inset-0 z-0 flex items-center justify-center opacity-20 blur-sm">
+            <svg viewBox="0 0 100 100" class="w-full h-full text-red-600" fill="none" stroke="currentColor" stroke-width="4">
+                <path d="M 0 20 L 20 30 L 40 25 L 60 70 L 80 85 L 100 95" />
+            </svg>
+        </div>
 
-        // Función para actualizar la vista
-        const updateCarousel = () => {
-            const slideWidth = carousel.clientWidth;
-            carousel.scrollTo({
-                left: currentSlide * slideWidth,
-                behavior: 'smooth'
-            });
-            updateIndicators();
-        };
-
-        const updateIndicators = () => {
-            indicators.forEach((ind, index) => {
-                if (index === currentSlide) {
-                    ind.classList.remove('bg-white/20');
-                    ind.classList.add('bg-brand-accent', 'w-6'); // Expande el activo (estilo iOS)
-                } else {
-                    ind.classList.remove('bg-brand-accent', 'w-6');
-                    ind.classList.add('bg-white/20');
-                }
-            });
+        <div class="relative z-10 w-full text-center">
+            <h2 class="text-3xl font-black text-red-500 mb-8 uppercase tracking-tight">3 años de tu vida borrados en 120 minutos.</h2>
             
-            // Actualizar estado de botones
-            prevBtn.disabled = currentSlide === 0;
-            nextBtn.disabled = currentSlide === totalSlides - 1;
-        };
+            <div class="bg-zinc-900 border border-red-900 p-5 rounded-lg mb-6 text-left">
+                <p class="text-base font-medium text-white">El bug que vos considerás "menor" es <span class="text-red-400 font-bold">injugable para el 30%</span> de tus jugadores en hardware específico.</p>
+            </div>
+            
+            <p class="text-sm text-zinc-300 text-left font-medium leading-relaxed">
+                Steam no perdona. Si bajás del 70% de reviews positivas la primera semana, el algoritmo te entierra vivo. <strong class="text-white">No hay respawn.</strong>
+            </p>
+        </div>
+    </div>
 
-        nextBtn.addEventListener('click', () => {
-            if (currentSlide < totalSlides - 1) {
-                currentSlide++;
-                updateCarousel();
-            }
-        });
+    <!-- SLIDE 4: La Solución Estratégica -->
+    <div class="slide bg-zinc-900 flex flex-col p-8 relative overflow-hidden">
+        <!-- Resplandor azul -->
+        <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600 rounded-full mix-blend-screen filter blur-[80px] opacity-30"></div>
+        
+        <div class="mb-8 mt-4 relative z-10">
+            <svg class="w-16 h-16 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            <h2 class="text-2xl font-black leading-tight text-white">El QA no es un gasto.<br><span class="text-blue-400">Es el seguro de vida de tu juego.</span></h2>
+        </div>
 
-        prevBtn.addEventListener('click', () => {
-            if (currentSlide > 0) {
-                currentSlide--;
-                updateCarousel();
-            }
-        });
+        <ul class="space-y-4 relative z-10 text-lg font-medium text-zinc-300">
+            <li class="flex items-start gap-3">
+                <span class="text-red-500 mt-1">✕</span>
+                <span>No se trata de "encontrar bugs".</span>
+            </li>
+            <li class="flex items-start gap-3">
+                <span class="text-blue-400 mt-1">✓</span>
+                <span>Se trata de <strong>blindar la experiencia</strong> del jugador y proteger tu reputación.</span>
+            </li>
+        </ul>
 
-        // Actualizar el índice al hacer scroll manual
-        carousel.addEventListener('scroll', () => {
-            const slideWidth = carousel.clientWidth;
-            const newIndex = Math.round(carousel.scrollLeft / slideWidth);
-            if(newIndex !== currentSlide) {
-                currentSlide = newIndex;
-                updateIndicators();
-            }
-        });
+        <div class="mt-auto relative z-10 bg-blue-950/50 border border-blue-900 p-4 rounded text-center">
+            <p class="font-bold text-blue-300 text-sm">Pasá de un lanzamiento vulnerable a un lanzamiento blindado.</p>
+        </div>
+    </div>
 
-        // Init
-        updateIndicators();
-    </script>
+    <!-- SLIDE 5: CTA -->
+    <div class="slide bg-black flex flex-col justify-center p-8 border border-zinc-800">
+        <h2 class="text-3xl font-black mb-6 leading-tight">
+            ¿Tu lanzamiento está blindado o estás jugando a la <span class="text-red-500">ruleta rusa</span>?
+        </h2>
+        
+        <p class="text-zinc-400 mb-8 text-sm leading-relaxed">
+            Creé una <strong>"Checklist Pre-Lanzamiento"</strong> con los 5 bugs invisibles que destruyen el 80% de las reviews en las primeras horas. Es la misma que uso con mis clientes AA.
+        </p>
+        
+        <div class="bg-zinc-900 border border-zinc-700 rounded-xl p-6 text-center transform hover:scale-105 transition-transform">
+            <p class="text-zinc-300 mb-3 text-sm font-medium">Comentá la palabra</p>
+            <div class="bg-white text-black font-black text-3xl py-3 px-4 rounded shadow-[0_0_20px_rgba(255,255,255,0.3)] tracking-widest uppercase mb-3">
+                BLINDAR
+            </div>
+            <p class="text-zinc-400 text-xs">y te la mando por DM. <span class="text-green-400 font-bold">Gratis.</span></p>
+        </div>
+        
+        <p class="text-center text-xs text-zinc-500 mt-6 font-mono uppercase tracking-widest">Evitá ser la próxima noticia triste.</p>
+    </div>
+
 </body>
 </html>
