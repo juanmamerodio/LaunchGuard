@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaunchGuard - LinkedIn Banners</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --banner-width: 1584px;
+            --banner-height: 396px;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .instructions {
+            text-align: center;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .banner-container {
+            width: var(--banner-width);
+            height: var(--banner-height);
+            background-color: #000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0px; /* Kept 0 for exact screenshot limits */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        /* Scaler for previewing on smaller screens, but keeping node size intact for screenshots */
+        .banner-wrapper {
+            width: var(--banner-width);
+            height: var(--banner-height);
+            transform-origin: top center;
+        }
+
+        @media (max-width: 1650px) {
+            .banner-wrapper {
+                transform: scale(0.8);
+                margin-bottom: -79px; /* adjust gap */
+            }
+        }
+        @media (max-width: 1300px) {
+            .banner-wrapper {
+                transform: scale(0.6);
+                margin-bottom: -158px;
+            }
+        }
+        @media (max-width: 1000px) {
+            .banner-wrapper {
+                transform: scale(0.4);
+                margin-bottom: -237px;
+            }
+        }
+
+        /* Safe zone indicator (Hidden by default, used for structural reference) */
+        .safe-zone {
+            position: absolute;
+            bottom: 24px;
+            left: 24px;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 2px dashed rgba(255, 0, 0, 0.3);
+            pointer-events: none;
+            display: none; 
+        }
+
+        /* Typography Utilities */
+        .font-space { font-family: 'Space Grotesk', sans-serif; }
+        .font-fira { font-family: 'Fira Code', monospace; }
+
+        /* Custom Gradients and Effects */
+        .bg-mesh-1 { background: radial-gradient(at 100% 0%, #312e81 0px, transparent 50%), radial-gradient(at 100% 100%, #111827 0px, transparent 50%), #030712; }
+        .bg-mesh-2 { background: radial-gradient(circle at 80% 50%, #1e1b4b 0%, #000000 70%); }
+        .bg-grid-dark { background-size: 40px 40px; background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-color: #09090b; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+        }
+
+        .text-gradient-silver {
+            background: linear-gradient(180deg, #FFFFFF 0%, #A1A1AA 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instructions">
+        <h1 class="text-2xl font-bold mb-2">LaunchGuard Banners</h1>
+        <p class="text-slate-400">Presioná F12, buscá el nodo <code class="text-indigo-400">&lt;div class="banner-wrapper"&gt;</code> que prefieras, clic derecho y seleccioná <strong>"Capture node screenshot"</strong>.</p>
+    </div>
+
+    <!-- OPTION 1: THE ESSENTIAL DARK -->
+    <div class="banner-wrapper">
+        <div class="banner-container bg-zinc-950 flex items-center justify-end pr-32 relative">
+            <!-- Grid overlay subtle -->
+            <div class="absolute inset-0 bg-grid-dark opacity-30"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-zinc-950 via-zinc-950/80 to-transparent"></div>
+            
+            <div class="relative z-10 flex flex-col items-end text-right">
+                <h1 class="font-space text-7xl font-bold tracking-tight text-white mb-4">LaunchGuard</h1>
+                <h2 class="text-2xl text-zinc-400 font-light tracking-wide mb-2">Technical QA & Launch Protection</h2>
+                <div class="w-12 h-1 bg-indigo-600 mt-2 rounded-full"></div>
+                <p class="text-lg text-zinc-500 mt-4 font-medium">Bulletproofing Day-1 Reviews for Indie & AA Studios.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 2: IOS GLASSMORPHISM -->
+    <div class="banner-wrapper">
+        <div class="banner-container bg-mesh-1 flex items-center justify-end pr-24 relative">
+            <div class="glass-panel p-12 w-[700px] flex flex-col justify-center">
+                <div class="flex items-center gap-4 mb-6">
+                    <svg class="w-10 h-10 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    <h1 class="font-space text-6xl font-bold text-white tracking-tight">LaunchGuard</h1>
+                </div>
+                <h2 class="text-2xl text-slate-300 font-light mb-4">Operational armor for critical builds.</h2>
+                <p class="text-slate-500 text-lg">You build the game. We make sure it doesn't break.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 3: THE TERMINAL / TECHNICAL -->
+    <div class="banner-container bg-black flex items-center justify-end pr-32 relative banner-wrapper">
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-indigo-900/20 via-black to-black"></div>
+        <div class="relative z-10 font-fira text-right">
+            <div class="text-indigo-500 text-xl mb-3">~/system/security/</div>
+            <h1 class="text-7xl font-bold text-white mb-6 tracking-tighter">&gt; LaunchGuard<span class="animate-pulse text-indigo-500">_</span></h1>
+            <h2 class="text-2xl text-zinc-400 font-light">Executing: <span class="text-emerald-400">Launch_Protection.sh</span></h2>
+            <p class="text-zinc-600 mt-4 text-lg">Zero softlocks. Zero refund waves.</p>
+        </div>
+    </div>
+
+    <!-- OPTION 4: CENTER RIGHT MINIMAL (APPLE STYLE) -->
+    <div class="banner-container bg-zinc-950 flex items-center justify-end pr-40 relative banner-wrapper">
+        <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-white/[0.03] to-transparent"></div>
+        <div class="relative z-10 text-right">
+            <h1 class="font-space text-8xl font-bold text-gradient-silver tracking-tighter mb-4">LaunchGuard</h1>
+            <p class="text-3xl text-zinc-400 font-light tracking-tight">Technical QA for Indie & AA.</p>
+        </div>
+    </div>
+
+    <!-- OPTION 5: THE BLUEPRINT / ARCHITECTURE -->
+    <div class="banner-container bg-[#0a0a0a] flex items-center justify-center pl-64 relative banner-wrapper border border-zinc-800">
+        <!-- Abstract geometry -->
+        <svg class="absolute right-0 top-0 h-full opacity-10 text-white" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="200" cy="200" r="150" stroke="currentColor" stroke-width="1"/>
+            <circle cx="200" cy="200" r="100" stroke="currentColor" stroke-width="1" stroke-dasharray="4 4"/>
+            <line x1="200" y1="0" x2="200" y2="400" stroke="currentColor" stroke-width="1"/>
+            <line x1="0" y1="200" x2="400" y2="200" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        <div class="relative z-10 flex flex-col items-start w-full max-w-4xl pl-24">
+            <h1 class="font-space text-7xl font-bold text-white tracking-tighter mb-2">LaunchGuard</h1>
+            <h2 class="text-2xl text-zinc-400 font-medium tracking-widest uppercase mb-6">Technical Launch Protection</h2>
+            <div class="flex gap-8 text-zinc-500 font-mono text-sm">
+                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-500"></div> Codebase Audits</span>
+                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-500"></div> Critical Loop Testing</span>
+                <span class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-indigo-500"></div> Edge-case Friction</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 6: TYPOGRAPHIC HERO -->
+    <div class="banner-container bg-black overflow-hidden relative banner-wrapper flex items-center justify-center">
+        <h1 class="absolute -right-20 top-1/2 -translate-y-1/2 font-space text-[12rem] font-bold text-white/5 tracking-tighter whitespace-nowrap select-none">
+            LAUNCHGUARD
+        </h1>
+        <div class="relative z-10 w-full flex justify-end pr-32">
+            <div class="text-right">
+                <h2 class="text-5xl font-bold text-white tracking-tight mb-4">Protecting Player Immersion.</h2>
+                <p class="text-2xl text-zinc-400 font-light">Ex-QA Kronos & ABK Games</p>
+                <div class="mt-6 inline-block border border-zinc-800 rounded-full px-6 py-2 text-zinc-300 text-sm font-mono bg-zinc-900/50 backdrop-blur-sm">
+                    Status: Securing critical launch windows
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 7: THE METRIC / DATA FOCUS -->
+    <div class="banner-container bg-mesh-2 flex items-center justify-end pr-32 relative banner-wrapper">
+        <div class="relative z-10 text-right max-w-3xl">
+            <h1 class="font-space text-6xl font-bold text-white mb-6">LaunchGuard</h1>
+            <h2 class="text-3xl text-zinc-200 font-light leading-tight mb-8">
+                Years of passion can be undone by a <span class="text-red-400">single softlock</span>.
+            </h2>
+            <div class="flex justify-end gap-12">
+                <div class="text-right">
+                    <p class="text-white font-bold text-xl">0</p>
+                    <p class="text-zinc-500 text-sm uppercase tracking-wider">Day-1 Softlocks</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-white font-bold text-xl">0</p>
+                    <p class="text-zinc-500 text-sm uppercase tracking-wider">Refund Waves</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 8: CLEAN CARD / SAAS STYLE -->
+    <div class="banner-container bg-zinc-100 flex items-center justify-end pr-32 relative banner-wrapper">
+        <!-- Yes, a light theme option just in case he wants to stand out aggressively -->
+        <div class="absolute inset-0 bg-gradient-to-r from-zinc-200 to-zinc-50"></div>
+        <div class="relative z-10 bg-white p-10 rounded-2xl shadow-xl shadow-zinc-200/50 border border-zinc-200 text-right w-[600px]">
+            <h1 class="font-space text-5xl font-bold text-zinc-900 mb-2">LaunchGuard</h1>
+            <p class="text-indigo-600 font-semibold uppercase tracking-wide text-sm mb-6">Technical Launch Protection</p>
+            <p class="text-zinc-600 leading-relaxed text-lg mb-0">
+                Bulletproofing Day-1 Reviews & Player Immersion for independent game studios.
+            </p>
+        </div>
+    </div>
+
+    <!-- OPTION 9: THE STEALTH MINIMALIST -->
+    <div class="banner-container bg-[#050505] flex items-center justify-end pr-48 relative banner-wrapper">
+        <div class="relative z-10 flex items-center gap-6">
+            <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-zinc-800 to-black border border-zinc-800 flex items-center justify-center shadow-2xl">
+                <svg class="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            </div>
+            <div class="text-left">
+                <h1 class="text-5xl font-medium text-zinc-200 tracking-tight">LaunchGuard<span class="text-zinc-600">.</span></h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPTION 10: THE GAME ENGINE (UNREAL/UNITY VIBE) -->
+    <div class="banner-container bg-[#1e1e1e] flex items-center justify-between px-32 relative banner-wrapper border-t-4 border-t-indigo-500">
+        <div class="w-[300px]"></div> <!-- Spacer for profile pic -->
+        <div class="relative z-10 flex flex-col w-full max-w-3xl pl-12 border-l border-zinc-700 h-2/3 justify-center">
+            <div class="flex items-center gap-3 mb-2">
+                <span class="px-2 py-1 bg-zinc-800 text-zinc-300 text-xs font-mono rounded border border-zinc-700">STATUS: ACTIVE</span>
+                <span class="px-2 py-1 bg-indigo-900/30 text-indigo-400 text-xs font-mono rounded border border-indigo-900/50">NODE: QA</span>
+            </div>
+            <h1 class="font-space text-6xl font-bold text-zinc-100 mb-3 tracking-tighter">LaunchGuard</h1>
+            <p class="text-xl text-zinc-400 max-w-xl">
+                Technical armor for Game Directors, Producers, and Publishers.
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
