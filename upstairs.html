@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaunchGuard Audit | Possible One</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        lunar: {
+                            900: '#050507',
+                            800: '#0F1115',
+                            700: '#1A1D24',
+                            400: '#8A93A6',
+                            100: '#F0F2F5',
+                        },
+                        accent: {
+                            DEFAULT: '#FFFFFF',
+                            glow: 'rgba(255, 255, 255, 0.15)',
+                            danger: '#FF3B30',
+                            warning: '#FF9500',
+                            success: '#34C759'
+                        }
+                    },
+                    backgroundImage: {
+                        'glass-gradient': 'linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)',
+                        'danger-gradient': 'linear-gradient(145deg, rgba(255,59,48,0.1) 0%, rgba(255,59,48,0.01) 100%)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* iOS 26.1 / High-End Lunar Aesthetic */
+        :root {
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(20, 22, 28, 0.6);
+            --glass-blur: blur(24px);
+        }
+
+        body {
+            background-color: #050507;
+            color: #F0F2F5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #050507;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2A2D35;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4A4D55;
+        }
+
+        /* Background Canvas */
+        #lunar-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+
+        .glass-nav {
+            background: rgba(5, 5, 7, 0.7);
+            backdrop-filter: blur(40px) saturate(180%);
+            -webkit-backdrop-filter: blur(40px) saturate(180%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px) scale(0.98);
+            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Glow Effects */
+        .text-glow {
+            text-shadow: 0 0 40px rgba(255,255,255,0.3);
+        }
+        
+        .danger-glow {
+            box-shadow: 0 0 60px rgba(255, 59, 48, 0.15);
+        }
+
+        /* Tab System */
+        .tab-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        .tab-content.active {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tab-btn.active {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* Custom selection */
+        ::selection {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-white/20 selection:text-white">
+
+    <!-- Lunar Dust Background -->
+    <canvas id="lunar-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300 py-4">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center font-bold text-xl">
+                    <i class="ph ph-shield-check"></i>
+                </div>
+                <span class="font-display font-bold text-xl tracking-tight">LaunchGuard</span>
+            </div>
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-lunar-400">
+                <a href="#executive-summary" class="hover:text-white transition-colors">The Situation</a>
+                <a href="#audit-findings" class="hover:text-white transition-colors">Audit Breakdown</a>
+                <a href="#steam-impact" class="hover:text-white transition-colors">Market Impact</a>
+            </div>
+            <div>
+                <a href="#proposal" class="bg-white/10 hover:bg-white text-white hover:text-black border border-white/20 hover:border-white transition-all duration-300 px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide backdrop-blur-md">
+                    Armor Your Launch
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-40 pb-32 lg:pt-56 lg:pb-40 overflow-hidden flex flex-col justify-center min-h-[90vh]">
+        <!-- Abstract glowing orb -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-white opacity-[0.02] rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-semibold text-lunar-400 uppercase tracking-widest mb-8 reveal">
+                <span class="w-2 h-2 rounded-full bg-accent-warning animate-pulse"></span>
+                Executive Audit Briefing
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tighter leading-[1.05] mb-8 reveal delay-100 text-glow">
+                The <span class="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-orange-400">80-Minute</span><br> Bleed.
+            </h1>
+            
+            <p class="text-lg md:text-2xl text-lunar-400 max-w-3xl mx-auto font-light leading-relaxed mb-12 reveal delay-200">
+                You built a masterpiece of scientific rigor. But your UI and onboarding are pushing players away right before they discover the genius of <strong class="text-white font-medium">Possible One</strong>. Let's fix the exact moment they hit "Refund".
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 reveal delay-300">
+                <a href="#audit-findings" class="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-black font-semibold tracking-wide hover:scale-105 transition-transform duration-300 flex items-center justify-center gap-2">
+                    View Audit Findings <i class="ph ph-arrow-down flex-shrink-0"></i>
+                </a>
+                <p class="text-sm text-lunar-400 font-mono mt-4 sm:mt-0 sm:ml-4 text-left">
+                    <span class="block text-white">Target: Upstairs Games CEO</span>
+                    <span class="block">Build: EA v0.7.04.0102</span>
+                    <span class="block">Auditor: Ezequiel Canello</span>
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Executive Summary -->
+    <section id="executive-summary" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="glass-panel p-8 md:p-16 reveal danger-glow">
+                <div class="grid md:grid-cols-2 gap-16 items-center">
+                    <div>
+                        <h2 class="text-3xl md:text-5xl font-display font-bold mb-6 tracking-tight">The 80-Minute Barrier</h2>
+                        <p class="text-lunar-400 text-lg leading-relaxed mb-6">
+                            <strong>Possible One</strong> has a clear identity and genuine design ambition. The technical rigor and volume of systems implemented are remarkable for Early Access. 
+                        </p>
+                        <p class="text-lunar-400 text-lg leading-relaxed mb-8">
+                            However, the central challenge is not the game itself, but the <span class="text-white border-b border-white/30 pb-0.5">distance between the player and the game</span>. The entry curve is too steep. The transition to the core loop is overwhelming. 
+                        </p>
+                        <div class="bg-red-500/10 border border-red-500/20 rounded-2xl p-6">
+                            <div class="flex items-start gap-4">
+                                <i class="ph-fill ph-warning-circle text-red-500 text-3xl"></i>
+                                <div>
+                                    <h4 class="text-red-400 font-semibold text-lg mb-1">Critical Insight</h4>
+                                    <p class="text-sm text-red-200/70">
+                                        You identified a critical abandonment window at 80 minutes. Our 2-hour stress test confirms exactly why: a convergence of a short tutorial, sudden post-tutorial cognitive overload, and lack of contextual resource data hits the player simultaneously.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <!-- Abstract Data Visualization -->
+                        <div class="aspect-square rounded-full border border-white/10 flex items-center justify-center relative p-8">
+                            <svg class="absolute inset-0 w-full h-full -rotate-90 text-lunar-800" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2" />
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#FF3B30" stroke-width="4" stroke-dasharray="283" stroke-dashoffset="200" class="drop-shadow-[0_0_8px_rgba(255,59,48,0.5)]" />
+                            </svg>
+                            <div class="text-center relative z-10">
+                                <span class="block text-6xl font-display font-bold text-white mb-2">80</span>
+                                <span class="block text-lunar-400 text-sm tracking-widest uppercase">Minutes</span>
+                                <span class="block text-red-400 text-xs mt-4 font-mono">CRITICAL CHURN POINT</span>
+                            </div>
+                            
+                            <!-- Plot points -->
+                            <div class="absolute top-1/4 -left-4 bg-lunar-800 border border-white/10 px-3 py-2 rounded-lg text-xs font-mono text-lunar-400">
+                                Min 15: Tutorial Starts
+                            </div>
+                            <div class="absolute bottom-1/4 -right-8 bg-red-900/40 border border-red-500/30 px-3 py-2 rounded-lg text-xs font-mono text-red-300 backdrop-blur-md">
+                                Min 80: System Overload
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Audit Breakdown Interactive -->
+    <section id="audit-findings" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-6xl font-display font-bold mb-4 tracking-tight">The Telemetry</h2>
+                <p class="text-xl text-lunar-400">Findings categorized by impact on player retention and technical friction.</p>
+            </div>
+
+            <!-- Custom Tabs -->
+            <div class="flex flex-wrap justify-center gap-4 mb-16 reveal delay-100">
+                <button class="tab-btn active px-6 py-3 rounded-full border border-white/10 text-sm font-semibold tracking-wide flex items-center gap-2" data-tab="retention">
+                    <span class="w-2 h-2 rounded-full bg-red-500"></span> Player Retention (Critical)
+                </button>
+                <button class="tab-btn bg-white/5 text-lunar-400 px-6 py-3 rounded-full border border-transparent hover:border-white/10 text-sm font-semibold tracking-wide flex items-center gap-2" data-tab="ui">
+                    <span class="w-2 h-2 rounded-full bg-yellow-500"></span> UI / UX Friction
+                </button>
+                <button class="tab-btn bg-white/5 text-lunar-400 px-6 py-3 rounded-full border border-transparent hover:border-white/10 text-sm font-semibold tracking-wide flex items-center gap-2" data-tab="tech">
+                    <span class="w-2 h-2 rounded-full bg-blue-500"></span> Tech & Audio
+                </button>
+            </div>
+
+            <!-- Tab Content: RETENTION -->
+            <div id="tab-retention" class="tab-content active max-w-5xl mx-auto">
+                
+                <!-- Finding Card 1 -->
+                <div class="glass-panel p-8 mb-8 relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <div>
+                            <span class="text-xs font-mono text-red-400 mb-2 block">FINDING #1 • HIGH IMPACT</span>
+                            <h3 class="text-2xl font-display font-bold">Post-Tutorial System Overload</h3>
+                        </div>
+                        <div class="px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-bold tracking-widest uppercase">
+                            Direct Link to 80m Churn
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mt-6">
+                        <div>
+                            <h4 class="text-sm text-lunar-400 uppercase tracking-wider mb-2 font-semibold">The Observation</h4>
+                            <p class="text-lunar-100 text-sm leading-relaxed">
+                                Upon completing the tutorial, the game presents multiple missions, tasks, and events simultaneously. The player lacks the time and context to process and prioritize them correctly.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm text-lunar-400 uppercase tracking-wider mb-2 font-semibold">The Danger</h4>
+                            <p class="text-lunar-100 text-sm leading-relaxed">
+                                Information overload at the exact moment a player needs to consolidate learning is a documented churn trigger. They make random decisions, perceive the game as chaotic, and abandon it. This coincides perfectly with the 80-minute window.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-white/10">
+                        <h4 class="text-sm text-green-400 uppercase tracking-wider mb-2 font-semibold flex items-center gap-2"><i class="ph-fill ph-check-circle"></i> The Armored State</h4>
+                        <p class="text-lunar-100 text-sm">A gradual post-tutorial transition with staggered event introductions. The management loop feels satisfying rather than overwhelming.</p>
+                    </div>
+                </div>
+
+                <!-- Finding Card 2 -->
+                <div class="glass-panel p-8 mb-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <div>
+                            <span class="text-xs font-mono text-red-400 mb-2 block">FINDING #2 • HIGH IMPACT</span>
+                            <h3 class="text-2xl font-display font-bold">No Contextual Resource Data</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mt-6">
+                        <div>
+                            <h4 class="text-sm text-lunar-400 uppercase tracking-wider mb-2 font-semibold">The Observation</h4>
+                            <p class="text-lunar-100 text-sm leading-relaxed">
+                                Resources are represented by icons without distinct colors or accessible tooltip descriptions. The player is forced to memorize or guess what each element represents.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm text-lunar-400 uppercase tracking-wider mb-2 font-semibold">The Danger</h4>
+                            <p class="text-lunar-100 text-sm leading-relaxed">
+                                In a core resource-management loop, not understanding resources equals not playing. The accumulated cognitive friction of interpreting the UI exhausts the player before they can enjoy the depth.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Finding Card 3 -->
+                 <div class="glass-panel p-8 mb-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <div>
+                            <span class="text-xs font-mono text-red-400 mb-2 block">FINDING #3 • HIGH IMPACT</span>
+                            <h3 class="text-2xl font-display font-bold">Tutorial Scope vs Game Complexity</h3>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-8 mt-6">
+                        <div>
+                            <h4 class="text-sm text-lunar-400 uppercase tracking-wider mb-2 font-semibold">The Observation</h4>
+                            <p class="text-lunar-100 text-sm leading-relaxed">
+                                The tutorial covers bare minimums but ends before the player assimilates relevant systems (crew management, energy, temperature).
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="text-sm text-lunar-400 uppercase tracking-wider mb-2 font-semibold">The Danger</h4>
+                            <p class="text-lunar-100 text-sm leading-relaxed">
+                                The player is exposed to the entirety of the game without conceptual tools. If this initial investment doesn't yield confidence, the player leaves.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: UI / UX -->
+            <div id="tab-ui" class="tab-content max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-6">
+                    
+                    <!-- UI Card 1 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-yellow-500">
+                        <span class="text-xs font-mono text-yellow-500 mb-2 block">MEDIUM IMPACT</span>
+                        <h3 class="text-xl font-display font-bold mb-4">Autosave Camera Disorientation</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> Loading an autosave places the camera in a position/angle never established by the player, requiring manual correction (Q/E).</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> Breaking spatial continuity upon returning to the game destroys trust in the save system and adds immediate friction.</p>
+                    </div>
+
+                    <!-- UI Card 2 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-yellow-500">
+                        <span class="text-xs font-mono text-yellow-500 mb-2 block">MEDIUM IMPACT</span>
+                        <h3 class="text-xl font-display font-bold mb-4">Irreversible 'Demolish' Action</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> The surface action to demolish a structure lacks a cancel option, unlike scan terrain or clear rubble.</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> An accidental click destroys resource chains irreversibly. Asymmetry between similar actions screams "unfinished".</p>
+                    </div>
+
+                    <!-- UI Card 3 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-yellow-500">
+                        <span class="text-xs font-mono text-yellow-500 mb-2 block">MEDIUM IMPACT</span>
+                        <h3 class="text-xl font-display font-bold mb-4">Rigid Camera Controls</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> No sensitivity adjustments for zoom/pan, and no alternate controls (WASD/Edge panning). Controls are hardcoded.</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> The camera is the primary tool. Lack of configuration excludes players and causes physical fatigue in long sessions.</p>
+                    </div>
+
+                    <!-- UI Card 4 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-yellow-500">
+                        <span class="text-xs font-mono text-yellow-500 mb-2 block">MEDIUM IMPACT</span>
+                        <h3 class="text-xl font-display font-bold mb-4">Indirect Object Interaction</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> Removing map elements (regolith) forces UI menu navigation instead of a direct contextual click on the 3D object.</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> Multiplies steps for common operations. Friction accumulates rapidly, slowing the macro-management pace.</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Tab Content: TECH & AUDIO -->
+            <div id="tab-tech" class="tab-content max-w-5xl mx-auto">
+                <div class="grid md:grid-cols-2 gap-6">
+                    
+                    <!-- Tech Card 1 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-blue-500 relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 text-blue-500/10">
+                            <i class="ph-fill ph-cpu text-9xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-blue-400 mb-2 block">HIGH IMPACT • TECH</span>
+                        <h3 class="text-xl font-display font-bold mb-4">UI Interaction Micro-Freezes</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> Clicking bottom interface buttons causes micro-stutters. Vehicles subsequently experience micro-teleports to catch up to the simulation tick.</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> Constant frame drops during basic UI interactions ruin the perceived optimization of the game, looking like severe core engine flaws.</p>
+                    </div>
+
+                    <!-- Tech Card 2 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-blue-500 relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 text-blue-500/10">
+                            <i class="ph-fill ph-fast-forward text-9xl"></i>
+                        </div>
+                        <span class="text-xs font-mono text-blue-400 mb-2 block">MEDIUM IMPACT • DESIGN</span>
+                        <h3 class="text-xl font-display font-bold mb-4">Absence of Simulation Speed (x2)</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> No fast-forward feature. Wait times between active decisions become dead time.</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> Lack of time control strips player agency. Advanced players perceive the pacing as sluggish, directly feeding the 80-minute churn.</p>
+                    </div>
+
+                    <!-- Audio Card 1 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-purple-500">
+                        <span class="text-xs font-mono text-purple-400 mb-2 block">MEDIUM IMPACT • AUDIO</span>
+                        <h3 class="text-xl font-display font-bold mb-4">Lander HUB Audio Peaking</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> Initial landing sounds are vastly louder than baseline mix and shift volume unexpectedly.</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> The opening 60 seconds dictate perceived quality. Deafening the player instantly breaks immersion.</p>
+                    </div>
+
+                    <!-- Audio Card 2 -->
+                    <div class="glass-panel p-6 border-t-4 border-t-purple-500">
+                        <span class="text-xs font-mono text-purple-400 mb-2 block">LOW IMPACT • POLISH</span>
+                        <h3 class="text-xl font-display font-bold mb-4">Cinematic Immersion Breakers</h3>
+                        <p class="text-sm text-lunar-400 mb-4"><strong>Bug:</strong> Visible OS cursor during opening cinematic + hardcoded typography switch mid-subtitles.</p>
+                        <p class="text-sm text-white/80"><strong>Why it matters:</strong> Small leaks sink ships. These minor flaws signal "unfinished Early Access jank" before the gameplay even begins.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data / Market Impact Section -->
+    <section id="steam-impact" class="py-24 bg-[#0a0b0e] relative border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="reveal">
+                    <div class="flex items-center gap-2 mb-4 text-lunar-400">
+                        <i class="ph-fill ph-steam-logo text-2xl"></i>
+                        <span class="font-mono text-sm tracking-widest uppercase">SteamDB App: 2276770 Integration</span>
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-6 tracking-tight">The Cost of Doing Nothing</h2>
+                    <p class="text-lunar-400 text-lg leading-relaxed mb-6">
+                        Steam's algorithm is merciless. In the management/survival genre, a "Mixed" rating on a Q1 2027 full launch will cut organic visibility by <strong>68%</strong>.
+                    </p>
+                    <p class="text-lunar-400 text-lg leading-relaxed mb-8">
+                        Players do not leave reviews saying: <em>"The late-game systems are incredibly deep but the UI onboarding friction caused me to quit at 80 minutes."</em>
+                    </p>
+                    <p class="text-white text-xl font-medium mb-8 border-l-4 border-red-500 pl-4">
+                        They leave a thumbs down and write: "Clunky and boring."
+                    </p>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-3 text-sm font-medium text-lunar-100">
+                            <i class="ph-fill ph-x-circle text-red-500 text-xl"></i> Loss of algorithmic traction upon 1.0 release.
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-medium text-lunar-100">
+                            <i class="ph-fill ph-x-circle text-red-500 text-xl"></i> High refund rate (sub-2 hour playtime).
+                        </li>
+                        <li class="flex items-center gap-3 text-sm font-medium text-lunar-100">
+                            <i class="ph-fill ph-x-circle text-red-500 text-xl"></i> Wasted marketing budget on acquired users who bounce.
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Fake UI Representation of Steam Reviews -->
+                <div class="space-y-4 reveal delay-200">
+                    <!-- Negative Mock -->
+                    <div class="bg-[#171a21] border border-[#2a475e] rounded p-4 shadow-lg opacity-80 filter grayscale hover:grayscale-0 transition-all">
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 bg-[#2a475e] rounded flex items-center justify-center">
+                                <i class="ph-fill ph-thumbs-down text-red-500 text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-[#c6d4df] text-sm font-bold">Not Recommended</div>
+                                <div class="text-[#8f98a0] text-xs">0.9 hrs on record (Refunded)</div>
+                            </div>
+                        </div>
+                        <p class="text-[#acb2b8] text-sm mt-3">
+                            "Looks great, but the tutorial is useless. I spent an hour trying to figure out what the blue icon was, built a base, couldn't delete a wall I misplaced, and then my rover teleported into a crater. Waste of time."
+                        </p>
+                    </div>
+
+                    <!-- Positive Mock (Armored) -->
+                    <div class="bg-[#171a21] border border-[#66c0f4]/30 rounded p-4 shadow-[0_0_30px_rgba(102,192,244,0.1)] relative">
+                        <div class="absolute -right-2 -top-2 bg-blue-500 text-white text-[10px] uppercase font-bold px-2 py-1 rounded">With LaunchGuard</div>
+                        <div class="flex items-center gap-3 mb-2">
+                            <div class="w-10 h-10 bg-[#2a475e] rounded flex items-center justify-center">
+                                <i class="ph-fill ph-thumbs-up text-blue-400 text-xl"></i>
+                            </div>
+                            <div>
+                                <div class="text-[#c6d4df] text-sm font-bold">Recommended</div>
+                                <div class="text-[#8f98a0] text-xs">45.2 hrs on record</div>
+                            </div>
+                        </div>
+                        <p class="text-[#acb2b8] text-sm mt-3">
+                            "The scientific rigor here is insane. Once you get past the first hour, the colony management loop just clicks. UI is super smooth and intuitive. A masterpiece in Early Access."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Pitch & Guarantee -->
+    <section id="proposal" class="py-32 relative overflow-hidden">
+        <!-- Background Glows -->
+        <div class="absolute bottom-0 left-0 w-full h-[500px] bg-gradient-to-t from-blue-900/20 to-transparent pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-5xl md:text-6xl font-display font-bold mb-8 tracking-tight reveal">We Don't Just Test.<br>We <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Armor Launches</span>.</h2>
+            
+            <p class="text-xl text-lunar-400 font-light leading-relaxed mb-12 reveal delay-100">
+                Your community will find bugs for free. But they will leave a negative review while doing it. LaunchGuard exists to protect the player's experience, avoid crisis mode on launch week, and secure your "Overwhelmingly Positive" rating.
+            </p>
+            
+            <div class="glass-panel p-8 md:p-12 text-left mb-12 reveal delay-200">
+                <h3 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <i class="ph-fill ph-lock-key text-blue-400"></i> The Q1 2027 Protocol
+                </h3>
+                <ul class="space-y-4 mb-8">
+                    <li class="flex items-start gap-3">
+                        <i class="ph ph-check text-blue-400 text-xl mt-0.5"></i>
+                        <div>
+                            <strong class="text-white">Continuous Retention QA:</strong> We track UI friction, UX dead-ends, and cognitive overload sprint by sprint.
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="ph ph-check text-blue-400 text-xl mt-0.5"></i>
+                        <div>
+                            <strong class="text-white">Edge-Case Eradication:</strong> We find the memory leaks and UI freezes before a streamer hits them live in front of 5,000 viewers.
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <i class="ph ph-check text-blue-400 text-xl mt-0.5"></i>
+                        <div>
+                            <strong class="text-white">Direct Developer Integration:</strong> Zero noise. Actionable tickets. Ready for your Jira board.
+                        </div>
+                    </li>
+                </ul>
+                
+                <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl p-6 text-center">
+                    <h4 class="text-white font-bold mb-2">The LaunchGuard Guarantee</h4>
+                    <p class="text-sm text-blue-200/80">If we sign to armor your Q1 2027 launch, we guarantee you won't lose a single user due to UI/UX friction in the first 2 hours of gameplay. We protect your conversion.</p>
+                </div>
+            </div>
+            
+            <!-- Scarcity / CTA -->
+            <div class="reveal delay-300">
+                <div class="inline-block bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-lunar-400 mb-6">
+                    <span class="inline-block w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                    Bandwidth Status: <strong class="text-white">2 Slots Remaining</strong> for Q1 '27 Projects
+                </div>
+                
+                <p class="text-sm text-lunar-400 mb-8 max-w-2xl mx-auto">
+                    We do not scale infinitely. We keep our client roster extremely tight so we don't sacrifice the professional depth required to make a game like <em>Possible One</em> flawless. 
+                </p>
+
+                <a href="mailto:ezequiel@launchguard.com?subject=Possible One - Launch Armoring Strategy" class="inline-flex items-center gap-3 px-10 py-5 rounded-full bg-white text-black font-bold text-lg hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] transition-all duration-300">
+                    Secure a Strategy Session <i class="ph ph-arrow-right font-bold"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-12 text-center text-lunar-400 text-sm">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center">
+            <div class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center text-white mb-4">
+                <i class="ph ph-shield-check text-xl"></i>
+            </div>
+            <p class="mb-2"><strong>LaunchGuard</strong> — Engineered by Ezequiel Canello.</p>
+            <p class="opacity-60">Confidential Audit Document for Upstairs Games. Do not distribute.</p>
+        </div>
+    </footer>
+
+    <!-- Logic / Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Particle System (Lunar Dust)
+            const canvas = document.getElementById('lunar-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 1.5;
+                    this.speedX = Math.random() * 0.5 - 0.25;
+                    this.speedY = Math.random() * 0.5 - 0.25;
+                    this.opacity = Math.random() * 0.5;
+                }
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                }
+                draw() {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            for(let i=0; i<150; i++) particles.push(new Particle());
+
+            function animateCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                requestAnimationFrame(animateCanvas);
+            }
+            animateCanvas();
+
+            // 2. Scroll Reveal Observer
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // 3. Tab System Logic
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Remove active from all
+                    tabBtns.forEach(b => {
+                        b.classList.remove('active');
+                        b.classList.add('bg-white/5', 'text-lunar-400');
+                    });
+                    tabContents.forEach(c => {
+                        c.classList.remove('active');
+                        setTimeout(() => c.style.display = 'none', 300); // Wait for fade out
+                    });
+
+                    // Add active to clicked
+                    btn.classList.add('active');
+                    btn.classList.remove('bg-white/5', 'text-lunar-400');
+                    
+                    const targetId = `tab-${btn.dataset.tab}`;
+                    const targetContent = document.getElementById(targetId);
+                    
+                    setTimeout(() => {
+                        targetContent.style.display = 'block';
+                        // Trigger reflow
+                        void targetContent.offsetWidth;
+                        targetContent.classList.add('active');
+                    }, 300);
+                });
+            });
+
+            // 4. Sticky Nav Glass Effect on Scroll
+            const nav = document.querySelector('nav');
+            window.addEventListener('scroll', () => {
+                if(window.scrollY > 50) {
+                    nav.classList.add('py-2');
+                    nav.classList.remove('py-4');
+                } else {
+                    nav.classList.add('py-4');
+                    nav.classList.remove('py-2');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
