@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaunchGuard | Follow-Up Telemetry: Possible One</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        lunar: {
+                            900: '#030305',
+                            800: '#0A0C10',
+                            700: '#12151C',
+                            600: '#1C212B',
+                            400: '#8A93A6',
+                            100: '#F0F2F5',
+                        },
+                        accent: {
+                            DEFAULT: '#FFFFFF',
+                            cyan: '#00F0FF',
+                            blue: '#0055FF',
+                            danger: '#FF3333',
+                            warning: '#FFB800',
+                            success: '#00FF66'
+                        }
+                    },
+                    backgroundImage: {
+                        'glass-gradient': 'linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.0) 100%)',
+                        'mesh-pattern': 'radial-gradient(circle at center, rgba(255,255,255,0.1) 1px, transparent 1px)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* iOS 26.1 / LaunchGuard High-End Aesthetic */
+        :root {
+            --glass-border: rgba(255, 255, 255, 0.06);
+            --glass-bg: rgba(10, 12, 16, 0.65);
+            --glass-blur: blur(32px);
+        }
+
+        body {
+            background-color: #030305;
+            color: #F0F2F5;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Custom Scrollbar - Minimalist */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #1C212B; border-radius: 20px; }
+        ::-webkit-scrollbar-thumb:hover { background: #2D3545; }
+
+        /* Complex Canvas Background */
+        #telemetry-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.4;
+        }
+
+        /* Glassmorphism Architecture */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-nav {
+            background: rgba(3, 3, 5, 0.8);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        /* Status Indicators */
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+        .delay-400 { transition-delay: 400ms; }
+
+        /* Scanning Line Effect */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.5), transparent);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+            animation: scan 4s linear infinite;
+            z-index: 10;
+            opacity: 0;
+        }
+
+        .glass-panel:hover .scan-line {
+            opacity: 1;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        /* Typography Highlights */
+        .text-gradient-cyan {
+            background: linear-gradient(to right, #ffffff, #00F0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .text-gradient-danger {
+            background: linear-gradient(to right, #ffffff, #FF3333);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Terminal UI styling */
+        .terminal-block {
+            background: rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .terminal-header {
+            background: rgba(255,255,255,0.05);
+            padding: 8px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        /* The Offer Glow */
+        .holy-grail-glow {
+            position: absolute;
+            inset: -1px;
+            background: linear-gradient(45deg, #00F0FF, #0055FF, transparent, transparent);
+            z-index: -1;
+            border-radius: inherit;
+            opacity: 0.3;
+            transition: opacity 0.5s ease;
+        }
+        .offer-card:hover .holy-grail-glow {
+            opacity: 0.8;
+            animation: pulseGlow 2s linear infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        ::selection {
+            background: rgba(0, 240, 255, 0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Telemetry Grid Background -->
+    <canvas id="telemetry-canvas"></canvas>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav transition-all duration-300 py-4">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+                    <i class="ph ph-radar text-xl"></i>
+                </div>
+                <div>
+                    <span class="block font-display font-bold text-lg tracking-tight leading-none text-white">LaunchGuard</span>
+                    <span class="block font-mono text-[10px] text-accent-cyan tracking-widest uppercase mt-1 flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse"></span> One Last One Audit
+                    </span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-1 flex-col items-end">
+                <span class="text-xs font-mono text-lunar-400">TARGET_APP: Possible One</span>
+                <span class="text-xs font-mono text-white/80 border border-white/20 rounded px-2 py-0.5 bg-white/5">BUILD: v0.7.04.0206</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-48 pb-32 overflow-hidden flex flex-col justify-center min-h-[85vh] border-b border-white/5">
+        <!-- Abstract gradient orb -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-accent-blue/10 rounded-full blur-[150px] pointer-events-none"></div>
+        
+        <div class="max-w-5xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-xs font-mono text-lunar-400 mb-8 reveal shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                <i class="ph-fill ph-file-text text-accent-cyan"></i>
+                Post-Audit Follow Up Document
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-display font-bold tracking-tighter leading-[1.1] mb-8 reveal delay-100">
+                You fixed the interface.<br>
+                <span class="text-gradient-danger">The core is still bleeding.</span>
+            </h1>
+            
+            <div class="max-w-3xl">
+                <p class="text-xl text-lunar-400 font-light leading-relaxed mb-6 reveal delay-200">
+                    We reviewed the <span class="text-white font-mono text-base bg-white/10 px-2 py-1 rounded">v0.7.04.0206</span> update. Your team moves fast. The new Guide system and the unified setup screen are massive architectural wins. 
+                </p>
+                <p class="text-xl text-lunar-400 font-light leading-relaxed mb-12 reveal delay-300">
+                    But the 80-minute churn window—the exact moment players abandon your game—remains structurally untouched. This is the final open-source diagnostic we will provide. 
+                </p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-6 reveal delay-400 border-t border-white/10 pt-8">
+                <a href="#unresolved" class="px-8 py-4 rounded-full bg-accent-danger/10 border border-accent-danger/30 text-accent-danger font-semibold tracking-wide hover:bg-accent-danger hover:text-white transition-all duration-300 flex items-center justify-center gap-3">
+                    <i class="ph ph-warning-circle text-xl"></i> View Critical Open Risks
+                </a>
+                <a href="#holy-grail" class="group flex items-center gap-2 text-sm font-mono text-lunar-400 hover:text-white transition-colors">
+                    Skip to LaunchGuard Protocol <i class="ph ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- The Wins (Addressed Findings) -->
+    <section id="addressed" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="flex items-center gap-4 mb-12 reveal">
+                <div class="w-12 h-12 rounded-full bg-accent-success/10 flex items-center justify-center border border-accent-success/20">
+                    <i class="ph ph-check text-accent-success text-2xl"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-display font-bold text-white">System Optimizations Validated</h2>
+                    <p class="text-lunar-400 text-sm font-mono mt-1">FINDINGS ADDRESSED IN THIS BUILD</p>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Win 1 -->
+                <div class="glass-panel p-6 reveal delay-100 group">
+                    <div class="scan-line"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono text-accent-success uppercase tracking-widest border border-accent-success/30 bg-accent-success/10 px-2 py-1 rounded">UX #3 Fixed</span>
+                        <i class="ph ph-flow-arrow text-lunar-400 text-xl group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3">Unified New Game Flow</h3>
+                    <p class="text-sm text-lunar-400 leading-relaxed">
+                        The confusing multi-step confirmation flow is gone. Single-page setup for expedition naming, difficulty, and tutorial toggles. Clean execution.
+                    </p>
+                </div>
+
+                <!-- Win 2 -->
+                <div class="glass-panel p-6 reveal delay-200 group">
+                    <div class="scan-line"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono text-accent-success uppercase tracking-widest border border-accent-success/30 bg-accent-success/10 px-2 py-1 rounded">Retention #4 Fixed</span>
+                        <i class="ph ph-book-open-text text-lunar-400 text-xl group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3">In-Game Wiki System</h3>
+                    <p class="text-sm text-lunar-400 leading-relaxed">
+                        Pressing 'G' now opens contextual explanations. This directly closes the massive information gap regarding resources and buildings. High impact fix.
+                    </p>
+                </div>
+
+                <!-- Win 3 -->
+                <div class="glass-panel p-6 reveal delay-300 group">
+                    <div class="scan-line"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <span class="text-[10px] font-mono text-accent-success uppercase tracking-widest border border-accent-success/30 bg-accent-success/10 px-2 py-1 rounded">Game Design #3 Fixed</span>
+                        <i class="ph ph-warning text-lunar-400 text-xl group-hover:text-white transition-colors"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3">Tutorial Error Feedback</h3>
+                    <p class="text-sm text-lunar-400 leading-relaxed">
+                        Added explicit feedback when attempting actions outside allowed tutorial parameters. Prevents players from breaking the onboarding sequence.
+                    </p>
+                </div>
+                
+                <!-- Win 4 & 5 Combined in a wider box -->
+                <div class="glass-panel p-6 lg:col-span-3 reveal delay-100 flex flex-col md:flex-row gap-8 items-center border-t border-t-accent-success/30 mt-4 bg-gradient-to-r from-accent-success/5 to-transparent">
+                    <div class="md:w-1/3">
+                        <h3 class="text-xl font-display font-bold text-white mb-2">Demolition & HUD Polish</h3>
+                        <p class="text-sm text-lunar-400">Multiple UX (#5) and minor visual findings addressed.</p>
+                    </div>
+                    <div class="md:w-2/3 terminal-block w-full">
+                        <div class="terminal-header">
+                            <div class="terminal-dot bg-red-500"></div>
+                            <div class="terminal-dot bg-yellow-500"></div>
+                            <div class="terminal-dot bg-green-500"></div>
+                        </div>
+                        <div class="p-4 text-lunar-400 space-y-2">
+                            <div><span class="text-accent-success">✓</span> Corridors demolishable while connected.</div>
+                            <div><span class="text-accent-success">✓</span> Improved keyword highlighting in popups.</div>
+                            <div><span class="text-accent-success">✓</span> Bottom bar visibility in Star View fixed.</div>
+                            <div><span class="text-white/50">Note: Interface is moving in a meaningful direction.</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Bleeding (Unresolved Criticals) -->
+    <section id="unresolved" class="py-24 relative bg-lunar-800 border-y border-white/5 overflow-hidden">
+        <!-- Danger glow -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-accent-danger/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+            <div class="mb-16 reveal text-center md:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-accent-danger/10 border border-accent-danger/30 rounded text-[10px] font-mono text-accent-danger uppercase tracking-widest mb-4">
+                    <span class="status-dot bg-accent-danger animate-pulse"></span> Critical Threat Detected
+                </div>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-white mb-4">The Distance Remains.</h2>
+                <p class="text-xl text-lunar-400 max-w-3xl">The most damaging factors identified in the Phase 1 Audit are untouched. You are shipping new features on top of a leaking funnel.</p>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8">
+                <!-- Main Threat Card -->
+                <div class="lg:col-span-8 glass-panel p-8 border-l-4 border-l-accent-danger reveal delay-100">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white mb-2">Post-Tutorial System Overload</h3>
+                            <p class="text-sm font-mono text-accent-danger">ID: Retention #3 | STATUS: UNRESOLVED</p>
+                        </div>
+                        <i class="ph-fill ph-warning-octagon text-4xl text-accent-danger/50"></i>
+                    </div>
+                    
+                    <div class="bg-[#1A1111] border border-accent-danger/20 rounded-xl p-6 mb-6">
+                        <h4 class="text-white font-semibold mb-2">The Reality Check</h4>
+                        <p class="text-lunar-400 text-sm leading-relaxed">
+                            The tutorial is still too short (Retention #1). More importantly, the moment it ends, the player is hit with simultaneous missions and events with zero adaptation time. <strong class="text-white">This is the exact trigger for your 80-minute abandonment window.</strong> Fixing the Wiki helps them read about the fire, but it doesn't put out the fire.
+                        </p>
+                    </div>
+
+                    <h4 class="text-sm text-lunar-400 uppercase tracking-wider mb-4 font-semibold">Associated Technical Blockers:</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 p-3 bg-white/5 rounded-lg border border-white/5">
+                            <i class="ph ph-bug text-accent-danger text-lg mt-0.5"></i>
+                            <div>
+                                <strong class="text-white text-sm block">UI Interaction Freezes (Game Design #1)</strong>
+                                <span class="text-xs text-lunar-400">Clicking bottom buttons still freezes the game. This affects every single session, regardless of player skill. It destroys perceived optimization.</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 p-3 bg-white/5 rounded-lg border border-white/5">
+                            <i class="ph ph-fast-forward text-accent-warning text-lg mt-0.5"></i>
+                            <div>
+                                <strong class="text-white text-sm block">No x2 Simulation Speed (Game Design #2)</strong>
+                                <span class="text-xs text-lunar-400">Pacing control is absent. Players are left waiting during the most critical retention window.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Friction List -->
+                <div class="lg:col-span-4 flex flex-col gap-4 reveal delay-200">
+                    <div class="glass-panel p-6 h-full flex flex-col">
+                        <h3 class="text-lg font-bold text-white mb-4 border-b border-white/10 pb-4">Accumulated Friction</h3>
+                        <p class="text-xs text-lunar-400 mb-6">These unresolved UX issues compound cognitive fatigue, driving negative Steam reviews.</p>
+                        
+                        <ul class="space-y-4 flex-grow">
+                            <li class="flex items-start gap-3">
+                                <span class="w-1.5 h-1.5 rounded-full bg-accent-warning mt-1.5 flex-shrink-0"></span>
+                                <span class="text-sm text-lunar-100"><span class="text-white/50 text-xs font-mono block">UX #4</span> Autosave camera position logic remains broken.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="w-1.5 h-1.5 rounded-full bg-accent-warning mt-1.5 flex-shrink-0"></span>
+                                <span class="text-sm text-lunar-100"><span class="text-white/50 text-xs font-mono block">UX #6</span> Camera sensitivity is locked. No WASD alternatives.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="w-1.5 h-1.5 rounded-full bg-accent-warning mt-1.5 flex-shrink-0"></span>
+                                <span class="text-sm text-lunar-100"><span class="text-white/50 text-xs font-mono block">UX #7</span> Forced UI menu interaction for physical map objects.</span>
+                            </li>
+                            <li class="flex items-start gap-3 opacity-60">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white mt-1.5 flex-shrink-0"></span>
+                                <span class="text-sm text-lunar-100"><span class="text-white/50 text-xs font-mono block">AUDIO</span> Landing SFX peaks & Cursor in cinematic.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Reality Check -->
+    <section class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-3xl font-display font-bold text-white mb-4">The Roadmap Paradox</h2>
+                <p class="text-lunar-400 text-lg">Adding weight to a structurally flawed foundation.</p>
+            </div>
+
+            <div class="relative max-w-4xl mx-auto">
+                <!-- Timeline Line -->
+                <div class="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-white/10 -translate-x-1/2"></div>
+
+                <!-- 0.7.05 -->
+                <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-16 reveal">
+                    <div class="md:w-5/12 text-left md:text-right pl-16 md:pl-0 pr-8">
+                        <span class="text-accent-cyan font-mono text-sm">v0.7.05</span>
+                        <h4 class="text-xl font-bold text-white mt-1">Astronaut Revamp</h4>
+                        <p class="text-sm text-lunar-400 mt-2">Adds progression paths and Earthside Operations. Deepens crew management.</p>
+                    </div>
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 rounded-full bg-lunar-900 border-2 border-accent-cyan -translate-x-1/2 z-10"></div>
+                    <div class="md:w-5/12 pl-16 md:pl-8 mt-4 md:mt-0">
+                        <div class="bg-accent-danger/10 border border-accent-danger/20 rounded p-4 text-sm text-lunar-100">
+                            <strong class="text-accent-danger block mb-1">LaunchGuard Risk Assessment:</strong>
+                            Adding complex progression before fixing the 80-minute onboarding overload will mathematically accelerate player churn.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 0.7.06 & 0.7.07 -->
+                <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between reveal delay-100">
+                    <div class="md:w-5/12 text-left md:text-right pl-16 md:pl-0 pr-8">
+                        <span class="text-white/50 font-mono text-sm">v0.7.06 - v0.7.07</span>
+                        <h4 class="text-xl font-bold text-white mt-1">Economy & Endgame</h4>
+                        <p class="text-sm text-lunar-400 mt-2">Satellites, Trading Networks, Orbital Shipyards.</p>
+                    </div>
+                    <div class="absolute left-8 md:left-1/2 w-4 h-4 rounded-full bg-lunar-900 border-2 border-white/20 -translate-x-1/2 z-10"></div>
+                    <div class="md:w-5/12 pl-16 md:pl-8 mt-4 md:mt-0">
+                        <p class="text-sm text-lunar-400 italic">"Onboarding is on the roadmap under Ongoing Polish..."</p>
+                        <p class="text-sm text-white mt-2">Players don't wait for "ongoing polish". They refund and leave a review today.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Holy Grail / The Offer -->
+    <section id="holy-grail" class="py-32 relative z-20">
+        <div class="max-w-5xl mx-auto px-6 lg:px-8">
+            
+            <div class="offer-card glass-panel relative p-8 md:p-16 border-white/20 text-center overflow-visible">
+                <div class="holy-grail-glow"></div>
+                
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-white text-black font-bold text-xs uppercase tracking-widest rounded-full mb-8 shadow-[0_0_20px_rgba(255,255,255,0.5)]">
+                    <i class="ph-fill ph-lock-key"></i> The LaunchGuard Protocol
+                </div>
+                
+                <h2 class="text-4xl md:text-6xl font-display font-bold text-white mb-6">Stop guessing.<br>Armor the launch.</h2>
+                
+                <p class="text-lg text-lunar-400 mb-12 max-w-2xl mx-auto">
+                    You have a game with immense potential. But the deeper system issues, the retention leaks, and the UX friction require a full service engagement. This was your last free diagnostic. To unlock the potential and secure a flawless 1.0 launch, we need to integrate.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-8 text-left mb-12">
+                    <div class="bg-lunar-900/50 border border-white/5 rounded-2xl p-6">
+                        <h4 class="text-white font-bold mb-4 flex items-center gap-2"><i class="ph-fill ph-shield-check text-accent-cyan"></i> What You Get</h4>
+                        <ul class="space-y-3 text-sm text-lunar-400">
+                            <li>• Continuous QA across all remaining sprints.</li>
+                            <li>• Deep-dive resolution of the 80-minute churn funnel.</li>
+                            <li>• Eradication of UI/Engine micro-freezes.</li>
+                            <li>• Direct Jira integration. Zero operational noise.</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-lunar-900/50 border border-white/5 rounded-2xl p-6 relative">
+                        <div class="absolute top-4 right-4 text-xs font-mono text-accent-cyan bg-accent-cyan/10 px-2 py-1 rounded">RISK-REVERSED</div>
+                        <h4 class="text-white font-bold mb-4 flex items-center gap-2"><i class="ph-fill ph-currency-dollar text-accent-success"></i> The Investment</h4>
+                        <div class="mb-4">
+                            <span class="text-3xl font-display font-bold text-white">$4,000</span> <span class="text-lunar-400 text-sm">Total Value</span>
+                        </div>
+                        <ul class="space-y-2 text-sm text-lunar-400 font-mono">
+                            <li class="flex justify-between border-b border-white/10 pb-2">
+                                <span>Initiation Retainer:</span> <strong class="text-white">$1,000</strong>
+                            </li>
+                            <li class="flex justify-between pt-2">
+                                <span>Upon Completion (1.0):</span> <strong class="text-white">$3,000</strong>
+                            </li>
+                        </ul>
+                        <p class="text-xs text-lunar-400 mt-4 italic">We only win if the game is fully armored. (max 45 Days)</p>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="flex flex-col items-center">
+                    <a href="mailto:ezequiel@launchguard.com?subject=Initiate LaunchGuard Protocol - Possible One" class="px-12 py-5 rounded-full bg-white text-black font-bold text-lg hover:scale-105 hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] transition-all duration-300 flex items-center gap-3">
+                        Initiate Protocol <i class="ph-bold ph-arrow-right"></i>
+                    </a>
+                    
+                    <p class="mt-6 text-sm text-lunar-400 flex items-center gap-2 justify-center">
+                        <span class="w-2 h-2 rounded-full bg-accent-warning animate-pulse"></span>
+                        Our bandwidth allows for <strong class="text-white">only 2 more projects</strong> this quarter to guarantee professional depth.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-12 text-center text-lunar-400 text-sm bg-lunar-900">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col items-center">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center text-white mb-4 border border-white/10">
+                <i class="ph ph-shield-check text-xl"></i>
+            </div>
+            <p class="mb-2"><strong>LaunchGuard</strong> — Engineered by Ezequiel Canello.</p>
+            <p class="opacity-60">Phase 2 Audit Document for Upstairs Games. Do not distribute.</p>
+        </div>
+    </footer>
+
+    <!-- Logic / Interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Telemetry Radar Canvas Background
+            const canvas = document.getElementById('telemetry-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            let time = 0;
+
+            function drawGrid() {
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+                ctx.lineWidth = 1;
+                const gridSize = 50;
+
+                for (let x = 0; x <= canvas.width; x += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, canvas.height);
+                    ctx.stroke();
+                }
+
+                for (let y = 0; y <= canvas.height; y += gridSize) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(canvas.width, y);
+                    ctx.stroke();
+                }
+            }
+
+            function drawRadar() {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const radius = Math.min(canvas.width, canvas.height) * 0.8;
+
+                // Radar rings
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.05)';
+                for(let i = 1; i <= 4; i++) {
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, radius * (i/4), 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Scanning line
+                ctx.save();
+                ctx.translate(centerX, centerY);
+                ctx.rotate(time * 0.02);
+                
+                const gradient = ctx.createLinearGradient(0, 0, radius, 0);
+                gradient.addColorStop(0, 'rgba(0, 240, 255, 0.2)');
+                gradient.addColorStop(1, 'rgba(0, 240, 255, 0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.arc(0, 0, radius, 0, Math.PI / 8);
+                ctx.lineTo(0, 0);
+                ctx.fill();
+                
+                // Leading edge
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(radius, 0);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+
+            // Small floating data points
+            const points = Array.from({length: 20}, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                active: Math.random() > 0.5,
+                phase: Math.random() * Math.PI * 2
+            }));
+
+            function drawPoints() {
+                points.forEach(p => {
+                    p.phase += 0.05;
+                    const opacity = p.active ? (Math.sin(p.phase) * 0.5 + 0.5) * 0.5 : 0.1;
+                    
+                    ctx.fillStyle = `rgba(255, 51, 51, ${opacity})`; // Danger red points
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    if(p.active && opacity > 0.4) {
+                        ctx.strokeStyle = `rgba(255, 51, 51, ${opacity * 0.5})`;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+                        ctx.stroke();
+                    }
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawGrid();
+                drawRadar();
+                drawPoints();
+                time++;
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            // 2. Scroll Reveal Observer
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+            // 3. Sticky Nav Blur Effect
+            const nav = document.querySelector('nav');
+            window.addEventListener('scroll', () => {
+                if(window.scrollY > 50) {
+                    nav.classList.add('py-2');
+                    nav.classList.remove('py-4');
+                    nav.style.background = 'rgba(3, 3, 5, 0.9)';
+                } else {
+                    nav.classList.add('py-4');
+                    nav.classList.remove('py-2');
+                    nav.style.background = 'rgba(3, 3, 5, 0.8)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

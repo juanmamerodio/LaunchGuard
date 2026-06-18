@@ -1,36 +1,59 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es" class="scroll-smooth bg-[#050505] text-zinc-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LaunchGuard - Seguro de Lanzamiento Indie</title>
-    <!-- Tailwind CSS -->
+    <title>LaunchGuard | Seguro de Lanzamiento para Estudios Indie y AA</title>
+    <meta name="description" content="Auditoría premium y QA estratégico para evitar reembolsos en tu día de lanzamiento en Steam.">
+    
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for Display (Gaming vibe) -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Spline 3D Viewer -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.51/build/spline-viewer.js"></script>
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GSAP for Awwwards-level animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
+    <!-- Vanilla Tilt JS (CORRECCIÓN CRÍTICA: CDN Añadido) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        /* Native Apple San Francisco Font Stack for absolute iOS feel */
-                        sans: ['-apple-system', 'BlinkMacSystemFont', '"San Francisco"', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'sans-serif'],
-                        display: ['Space Grotesk', '-apple-system', 'sans-serif'],
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
                     },
                     colors: {
                         brand: {
                             dark: '#050505',
-                            card: '#111111',
-                            accent: '#6366f1', // Indigo
-                            neon: '#10b981', // Emerald
-                            alert: '#ef4444' // Red
+                            accent: '#10b981', // Emerald for success/guarantees
+                            alert: '#ef4444' // Red for pain points
+                        },
+                        zinc: {
+                            950: '#0a0a0b', 900: '#18181b', 800: '#27272a',
+                            700: '#3f3f46', 600: '#52525b', 500: '#71717a',
+                            400: '#a1a1aa', 300: '#d4d4d8', 200: '#e4e4e7',
+                            100: '#f4f4f5', 50: '#fafafa',
                         }
                     },
-                    backgroundImage: {
-                        'grid-pattern': "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h40v40H0V0zm1 1h38v38H1V1z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E\")",
+                    boxShadow: {
+                        'premium': '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
+                        'glow': '0 0 40px -10px rgba(255, 255, 255, 0.08)',
+                        'neon-subtle': '0 0 30px -5px rgba(16, 185, 129, 0.15)',
                     }
                 }
             }
@@ -38,283 +61,599 @@
     </script>
 
     <style>
-        /* iOS 26.1 UI Concept Styles - Mobile First */
+        /* Reset Base y Lenis Scroll */
+        html { scroll-behavior: initial !important; }
         body {
             background-color: #050505;
-            color: #f8fafc;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
         
+        .lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+        /* Ruido Analógico Premium */
+        .noise-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 9999; opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Glassmorphism Classes */
         .glass-panel {
-            background: rgba(17, 17, 17, 0.65);
+            background: rgba(10, 10, 11, 0.6);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .text-glow {
-            text-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+        .glass-card {
+            background: linear-gradient(145deg, rgba(39, 39, 42, 0.2) 0%, rgba(24, 24, 27, 0.4) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transform-style: preserve-3d;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255,255,255,0.1);
+        .text-balance { text-wrap: balance; }
+        spline-viewer::part(logo) { display: none !important; }
+
+        /* Animaciones CSS - Casos de Éxito */
+        .scanner-container { position: relative; overflow: hidden; }
+        .scanner-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: #10b981; box-shadow: 0 0 10px #10b981, 0 0 20px #10b981;
+            animation: scan 3s cubic-bezier(0.85, 0, 0.15, 1) infinite;
+        }
+        @keyframes scan {
+            0% { top: -10%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
         }
         
-        @media (hover: hover) {
-            .btn-primary:hover {
-                transform: translateY(-2px) scale(1.02);
-                box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
-            }
-        }
+        .bug-element { transition: all 0.3s ease; }
+        .scanner-container:hover .bug-element { border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
 
-        .btn-primary:active {
-            transform: scale(0.98);
+        .chart-bar { transform-origin: bottom; animation: growBar 2s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0;}
+        @keyframes growBar {
+            0% { transform: scaleY(0.1); opacity: 0; }
+            100% { transform: scaleY(1); opacity: 1; }
         }
+        .bar-1 { animation-delay: 0.2s; }
+        .bar-2 { animation-delay: 0.4s; }
+        .bar-3 { animation-delay: 0.6s; }
+        .bar-4 { animation-delay: 0.8s; }
 
-        /* Reveal Animation */
-        .reveal {
+        /* Corrección Nav - Oculto hasta scrollear */
+        #nav-bg {
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Ambient Glow - Adjusted for mobile performance */
-        .ambient-glow {
-            position: absolute;
-            width: 150vw;
-            height: 150vw;
-            max-width: 600px;
-            max-height: 600px;
-            background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
+            transition: opacity 0.4s ease;
             pointer-events: none;
-            z-index: -1;
+        }
+        #nav-bg.scrolled {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* El logo animado que transiciona */
+        #nav-logo {
+            transform-origin: left center;
+            will-change: transform;
+        }
+        
+        /* Ocultar elementos para revelarlos con GSAP */
+        .gs-reveal {
+            visibility: hidden;
         }
     </style>
 </head>
-<body class="antialiased selection:bg-brand-accent selection:text-white relative overflow-x-hidden min-h-screen bg-grid-pattern flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-zinc-800 selection:text-zinc-100 relative">
 
-    <!-- Ambient background elements -->
-    <div class="ambient-glow top-0 left-0 -translate-x-1/3 -translate-y-1/3 md:-translate-x-1/2 md:-translate-y-1/2"></div>
-    <div class="ambient-glow bottom-0 right-0 translate-x-1/3 translate-y-1/3 md:translate-x-1/2 md:translate-y-1/2" style="background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, rgba(0,0,0,0) 70%);"></div>
+    <div class="noise-overlay"></div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 top-2 md:top-4 px-2 md:px-6 lg:px-8">
-        <div class="max-w-5xl mx-auto glass-panel px-4 py-3 md:px-6 md:py-4 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <i data-lucide="shield-check" class="text-brand-accent w-5 h-5 md:w-6 md:h-6"></i>
-                <span class="font-display font-bold text-base md:text-lg tracking-tight uppercase">LaunchGuard</span>
+    <!-- Barra de Navegación Fija -->
+    <nav class="fixed w-full z-[90] top-0 h-24 flex items-center transition-all duration-300">
+        <!-- Fondo Glass (Solo aparece al hacer scroll) -->
+        <div id="nav-bg" class="absolute inset-0 w-full h-full glass-panel"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 w-full flex items-center justify-between relative z-10">
+            
+            <!-- Logo Container (Acá vive el logo nativamente) -->
+            <div id="logo-container" class="flex-shrink-0">
+                <!-- Este es el logo que arranca gigante en el hero y termina acá -->
+                <div id="nav-logo" class="bg-[#050505] flex items-center gap-3 p-2 rounded-xl border border-white/[0.05] shadow-premium cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div id="nav-logo-icon" class="w-10 h-10 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0 transition-colors">
+                        <svg class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                    </div>
+                    <div class="text-left pr-2 flex items-center">
+                        <h1 class="text-2xl font-medium text-zinc-200 tracking-tight whitespace-nowrap">LaunchGuard<span class="text-zinc-600">.</span></h1>
+                    </div>
+                </div>
             </div>
-            <a href="#agenda" class="flex items-center gap-2 text-xs md:text-sm font-semibold bg-white/5 hover:bg-white/10 active:bg-white/15 transition-colors px-3 py-1.5 md:px-4 md:py-2 rounded-full border border-white/5">
-                <div class="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-brand-neon animate-pulse"></div>
-                <span class="hidden xs:inline">2 Cupos Disponibles</span>
-                <span class="xs:hidden">2 Cupos</span>
-            </a>
+
+            <!-- Links & CTA Derecha -->
+            <div class="flex items-center gap-6 md:gap-8">
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#metodo" class="text-xs uppercase tracking-[0.15em] text-zinc-400 hover:text-white transition-colors">Método</a>
+                    <a href="#casos" class="text-xs uppercase tracking-[0.15em] text-zinc-400 hover:text-white transition-colors">Casos</a>
+                    <a href="#desglose" class="text-xs uppercase tracking-[0.15em] text-zinc-400 hover:text-white transition-colors">Desglose</a>
+                </div>
+                <!-- Badge Animado -->
+                <a href="#cta" class="flex items-center gap-2 bg-white/[0.03] hover:bg-white/[0.08] transition-colors border border-white/[0.08] rounded-full px-4 py-2 pointer-events-auto">
+                    <span class="relative flex h-2 w-2">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-accent opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-accent"></span>
+                    </span>
+                    <span class="text-[10px] md:text-xs font-semibold uppercase tracking-widest text-zinc-300 whitespace-nowrap">2 Cupos</span>
+                </a>
+            </div>
+            
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <main class="flex-grow">
-        <section class="pt-32 pb-16 md:pt-40 md:pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto flex flex-col items-center text-center relative z-10">
-            <div class="inline-flex items-center gap-1.5 md:gap-2 px-3 py-1.5 rounded-full border border-brand-accent/30 bg-brand-accent/10 text-brand-accent text-xs md:text-sm font-medium mb-6 md:mb-8">
-                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 md:w-4 md:h-4"></i>
-                <span>El algoritmo de Steam no perdona errores.</span>
+    <!-- Contenido Principal -->
+    <main class="flex-grow w-full relative z-10 pt-24">
+        
+        <!-- Hero Section -->
+        <section id="hero" class="relative min-h-[85vh] flex flex-col justify-center overflow-hidden">
+            <!-- 3D Spline Background (Link actualizado a uno público de demo por el error 403) -->
+            <div class="absolute inset-0 z-0 flex justify-end items-center opacity-30 md:opacity-100 pointer-events-none">
+                <div class="w-[150%] h-[150%] md:w-full md:h-full translate-x-10 lg:translate-x-32">
+                    <spline-viewer url="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"></spline-viewer>
+                </div>
             </div>
-            
-            <h1 class="font-display text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-4 md:mb-6 leading-[1.1] text-glow">
-                No "testeo" tu juego.<br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-purple-400">Blindo tu lanzamiento.</span>
-            </h1>
-            
-            <p class="text-lg sm:text-xl md:text-2xl text-white/60 max-w-3xl mb-8 md:mb-10 leading-relaxed font-light px-2">
-                Los bugs críticos y la mala fricción hunden tus ventas en 48hs. Yo audito, detecto y prevengo el fracaso para que tu estudio indie <b>escale sin reembolsos.</b>
-            </p>
 
-            <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto px-2">
-                <a href="#agenda" class="btn-primary rounded-2xl px-6 py-4 md:px-8 text-base md:text-lg font-bold flex items-center justify-center gap-2 w-full sm:w-auto">
-                    <i data-lucide="calendar" class="w-5 h-5"></i>
-                    Auditoría Gratuita
-                </a>
-                <a href="#metodo" class="glass-panel rounded-2xl px-6 py-4 md:px-8 text-base md:text-lg font-medium flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 active:bg-white/15 transition-colors w-full sm:w-auto border-white/5">
-                    <i data-lucide="crosshair" class="w-5 h-5"></i>
-                    Ver Método
-                </a>
-            </div>
-            <p class="mt-6 md:mt-4 text-xs md:text-sm text-white/40 flex items-center gap-1.5">
-                <i data-lucide="clock" class="w-3.5 h-3.5 md:w-4 md:h-4"></i> Atención directa a Game Directors.
-            </p>
-        </section>
+            <div class="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r from-[#050505] via-[#050505]/90 to-transparent z-0 pointer-events-none"></div>
 
-        <!-- Authority/Logos Section -->
-        <section class="py-8 md:py-10 border-y border-white/5 bg-black/50 backdrop-blur-sm z-10 relative overflow-hidden">
-            <div class="max-w-5xl mx-auto px-4 text-center">
-                <p class="text-[10px] md:text-xs uppercase tracking-widest text-white/40 font-semibold mb-4 md:mb-6">Experiencia comprobada en entornos de alto rendimiento</p>
-                <div class="flex flex-wrap justify-center items-center gap-6 md:gap-16 opacity-50 md:opacity-60 grayscale transition-all duration-500 px-2">
-                    <div class="flex items-center gap-1.5 md:gap-2 font-display text-sm sm:text-lg md:text-xl font-bold"><i data-lucide="gamepad-2" class="text-brand-accent w-4 h-4 md:w-6 md:h-6"></i> KRONOS</div>
-                    <div class="flex items-center gap-1.5 md:gap-2 font-display text-sm sm:text-lg md:text-xl font-bold"><i data-lucide="swords" class="text-brand-accent w-4 h-4 md:w-6 md:h-6"></i> ABK-GAMES</div>
-                    <div class="flex items-center gap-1.5 md:gap-2 font-display text-sm sm:text-lg md:text-xl font-bold"><i data-lucide="coins" class="text-brand-accent w-4 h-4 md:w-6 md:h-6"></i> CRIPTOGAMERS</div>
+            <div class="max-w-7xl mx-auto px-6 w-full relative z-10">
+                
+                <!-- Ancla transparente donde el logo gigante se apoya al cargar la página -->
+                <div id="hero-logo-anchor" class="h-20 w-full mb-6"></div> 
+
+                <h2 class="text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-medium tracking-tighter text-zinc-100 leading-[1.05] mb-8 text-balance">
+                    No testeo tu juego.<br>
+                    <span class="text-zinc-600">Blindo tu lanzamiento.</span>
+                </h2>
+                
+                <p class="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-10 max-w-xl">
+                    Auditoría premium B2B para estudios Indie y AA. Detectamos fricción crítica y bugs invisibles <span class="text-zinc-200 font-medium">antes de que destruyan tus reseñas en Steam.</span>
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-5 w-full sm:w-auto">
+                    <a href="#cta" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-zinc-100 text-[#050505] hover:bg-white active:scale-[0.98] transition-all text-sm font-semibold tracking-widest uppercase text-center shadow-glow">
+                        Agendar Auditoría
+                    </a>
+                    <a href="#metodo" class="w-full sm:w-auto px-8 py-4 rounded-xl glass-panel border-none text-zinc-300 hover:text-white hover:bg-white/[0.05] active:scale-[0.98] transition-all text-sm font-semibold tracking-widest uppercase text-center flex items-center justify-center gap-2">
+                        <i data-lucide="crosshair" class="w-4 h-4"></i> Ver Método
+                    </a>
                 </div>
             </div>
         </section>
 
-        <!-- The Problem Section (Pain) -->
-        <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto reveal">
-            <div class="glass-panel p-6 sm:p-8 md:p-12 relative overflow-hidden border-brand-alert/20">
-                <div class="absolute -top-10 -right-10 md:top-0 md:right-0 p-8 opacity-[0.05] md:opacity-10 pointer-events-none">
-                    <i data-lucide="trending-down" class="w-40 h-40 md:w-48 md:h-48 text-brand-alert"></i>
-                </div>
-                <div class="relative z-10 md:w-3/4">
-                    <h2 class="font-display text-2xl sm:text-3xl md:text-4xl font-bold mb-4 leading-tight">A Steam no le importa cuántos años trabajaste.</h2>
-                    <p class="text-base md:text-lg text-white/70 mb-5 leading-relaxed">
-                        El día de lanzamiento es el más importante de tu carrera. Si un jugador se frustra en los primeros 10 minutos por un "game feel" tosco o un bug invisible, te clava una reseña negativa y <b>pide un reembolso</b>.
-                    </p>
-                    <p class="text-base md:text-lg text-brand-alert font-semibold">
-                        Ahí se mueren años de desarrollo e inversión en marketing. Yo pongo un techo de acero a ese riesgo.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Solutions (Features B2B) -->
-        <section id="metodo" class="py-16 md:py-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto relative z-10">
-            <div class="text-center mb-10 md:mb-16 reveal">
-                <h2 class="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-3">El Sistema LaunchGuard</h2>
-                <p class="text-lg md:text-xl text-white/50 px-4">Cómo aseguro la rentabilidad y reputación de tu estudio.</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                <!-- Card 1 -->
-                <div class="glass-panel p-6 md:p-8 reveal transition-colors group border-white/5 hover:border-brand-accent/30">
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-brand-accent/10 flex items-center justify-center mb-5 border border-brand-accent/20 transition-transform group-hover:scale-105">
-                        <i data-lucide="crosshair" class="w-6 h-6 md:w-7 md:h-7 text-brand-accent"></i>
+        <!-- Prueba Social -->
+        <section class="py-12 border-y border-white/[0.02] bg-zinc-950/50">
+            <div class="max-w-7xl mx-auto px-6">
+                <p class="text-center text-[10px] uppercase tracking-[0.3em] text-zinc-600 font-semibold mb-8 gs-reveal">Sistemas auditados para entornos de alto rendimiento</p>
+                <div class="flex flex-wrap justify-center items-center gap-8 md:gap-24 opacity-50 grayscale">
+                    <div class="flex items-center gap-2 md:gap-3 font-bold text-lg md:text-xl tracking-widest text-zinc-300 gs-reveal" data-delay="0">
+                        <i data-lucide="gamepad-2" class="w-5 h-5 md:w-6 md:h-6 fill-current text-zinc-400"></i> KRONOS
                     </div>
-                    <h3 class="font-display text-lg md:text-xl font-bold mb-2 md:mb-3">Auditoría Crítica de Fricción</h3>
-                    <p class="text-white/60 text-sm md:text-sm leading-relaxed">
-                        Análisis agresivo de los primeros 120 minutos de gameplay. Detecto y elimino cualquier aspereza en la UX que cause frustración temprana, asegurando la retención del Día 1.
-                    </p>
-                </div>
-                <!-- Card 2 -->
-                <div class="glass-panel p-6 md:p-8 reveal transition-colors group border-white/5 hover:border-brand-neon/30" style="transition-delay: 100ms;">
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-brand-neon/10 flex items-center justify-center mb-5 border border-brand-neon/20 transition-transform group-hover:scale-105">
-                        <i data-lucide="bot" class="w-6 h-6 md:w-7 md:h-7 text-brand-neon"></i>
+                    <div class="flex items-center gap-2 md:gap-3 font-bold text-lg md:text-xl tracking-widest text-zinc-300 gs-reveal" data-delay="0.1">
+                        <i data-lucide="swords" class="w-5 h-5 md:w-6 md:h-6 fill-current text-zinc-400"></i> ABK-GAMES
                     </div>
-                    <h3 class="font-display text-lg md:text-xl font-bold mb-2 md:mb-3">QA Técnico Acelerado (IA)</h3>
-                    <p class="text-white/60 text-sm md:text-sm leading-relaxed">
-                        No te entrego listas infinitas de errores irrelevantes. Utilizo procesos de IA para encontrar "game-breakers" y te doy reportes quirúrgicos, directos y listos para accionar.
-                    </p>
-                </div>
-                <!-- Card 3 -->
-                <div class="glass-panel p-6 md:p-8 reveal transition-colors group border-white/5 hover:border-purple-500/30 sm:col-span-2 md:col-span-1" style="transition-delay: 200ms;">
-                    <div class="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-5 border border-purple-500/20 transition-transform group-hover:scale-105">
-                        <i data-lucide="shield" class="w-6 h-6 md:w-7 md:h-7 text-purple-400"></i>
+                    <div class="flex items-center gap-2 md:gap-3 font-bold text-lg md:text-xl tracking-widest text-zinc-300 gs-reveal" data-delay="0.2">
+                        <i data-lucide="coins" class="w-5 h-5 md:w-6 md:h-6"></i> CRIPTOGAMERS
                     </div>
-                    <h3 class="font-display text-lg md:text-xl font-bold mb-2 md:mb-3">Blindaje de Reseñas</h3>
-                    <p class="text-white/60 text-sm md:text-sm leading-relaxed">
-                        Filtro y optimizo el "Game Feel" basado en mi experiencia en proyectos AAA y AA. Transformamos potenciales detractores en fans que recomiendan tu juego.
-                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- Hormozi Guarantee Section -->
-        <section class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto reveal">
-            <div class="relative rounded-3xl p-[1px] bg-gradient-to-br from-brand-accent/80 via-brand-accent/20 to-brand-neon/80 overflow-hidden">
-                <div class="bg-brand-dark rounded-[23px] p-8 sm:p-10 md:p-14 text-center relative z-10">
-                    <div class="absolute inset-0 bg-gradient-to-b from-brand-accent/5 to-transparent pointer-events-none rounded-[23px]"></div>
+        <!-- Sección de Dolor -->
+        <section class="py-32 md:py-48 relative">
+            <div class="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-brand-alert/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="max-w-5xl">
+                    <div class="flex items-center gap-2 mb-8 gs-reveal">
+                        <i data-lucide="trending-down" class="w-5 h-5 text-brand-alert"></i>
+                        <span class="text-xs uppercase tracking-[0.2em] text-brand-alert/80 font-semibold">El Riesgo Oculto</span>
+                    </div>
                     
-                    <i data-lucide="badge-check" class="w-12 h-12 md:w-16 md:h-16 text-brand-neon mx-auto mb-5 md:mb-6"></i>
-                    <h2 class="font-display text-2xl sm:text-3xl md:text-5xl font-bold mb-4">Garantía de Riesgo Cero</h2>
-                    <p class="text-base sm:text-lg md:text-xl text-white/80 mb-6 md:mb-8 max-w-2xl mx-auto">
-                        Si en la primera semana de auditoría no detecto al menos <span class="text-brand-neon font-bold">3 fallos críticos</span> que pondrían en riesgo tu calificación en Steam...
-                    </p>
-                    <div class="glass-panel inline-block px-4 py-3 md:px-6 md:py-4 border-brand-neon/30 bg-brand-neon/5 text-brand-neon font-display text-sm sm:text-lg md:text-xl font-bold w-full sm:w-auto">
-                        La consultoría de "Game Feel" corre por mi cuenta.
+                    <h2 class="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-medium text-zinc-100 tracking-tighter leading-[1.1] mb-12 text-balance gs-reveal">
+                        A Steam no le importa cuántos años trabajaste.
+                    </h2>
+                    
+                    <div class="pl-4 md:pl-10 border-l-2 border-zinc-800 gs-reveal">
+                        <p class="text-xl md:text-3xl lg:text-4xl text-zinc-400 font-light leading-snug text-balance mb-6">
+                            El día de lanzamiento es el más importante de tu carrera. <span class="text-zinc-200 font-medium">10 minutos de fricción</span> o un bug invisible en el Día 1 equivalen a:
+                        </p>
+                        <ul class="space-y-4 text-base md:text-xl text-zinc-500 font-light list-none">
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-brand-alert/50 rounded-full"></span> Reseñas "Mayormente Negativas"</li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-brand-alert/50 rounded-full"></span> Reembolsos masivos</li>
+                            <li class="flex items-center gap-3"><span class="w-1.5 h-1.5 bg-brand-alert/50 rounded-full"></span> Muerte de visibilidad en el algoritmo</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Final CTA & Calendar Filter -->
-        <section id="agenda" class="py-16 md:py-24 px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto text-center reveal">
-            <h2 class="font-display text-3xl sm:text-4xl md:text-6xl font-black mb-4 md:mb-6 leading-tight">Tu lanzamiento está en juego.</h2>
-            <p class="text-base md:text-xl text-white/60 mb-8 md:mb-10 px-2">
-                Trabajo con un volumen muy bajo de estudios. Actualmente me quedan <b class="text-white">2 cupos</b>. Si tu proyecto está cerca del lanzamiento, hablemos de Dev a Dev.
-            </p>
-            
-            <div class="glass-panel p-6 sm:p-8 md:p-12 border-brand-accent/20 mx-2 sm:mx-0">
-                <h3 class="text-xl md:text-2xl font-bold mb-2">Paso 1: Auditoría de Inmersión</h3>
-                <p class="text-white/50 mb-6 md:mb-8 text-xs md:text-sm">Responde unas preguntas rápidas para ver si calificas (Filtro Automático).</p>
+        <!-- Autoridad -->
+        <section class="py-24 md:py-32 bg-zinc-950/30 border-y border-white/[0.02]">
+            <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row gap-12 md:gap-16 items-start">
+                <div class="md:w-1/3 gs-reveal">
+                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-6">
+                        <i data-lucide="terminal" class="w-8 h-8 text-zinc-400"></i>
+                    </div>
+                    <h3 class="text-2xl md:text-3xl font-medium tracking-tight text-zinc-200 mb-2">Ezequiel Canello</h3>
+                    <p class="text-xs md:text-sm uppercase tracking-widest text-zinc-500 font-semibold">Game QA System Engineer</p>
+                </div>
+                <div class="md:w-2/3 gs-reveal" data-delay="0.1">
+                    <h4 class="text-xl md:text-2xl text-zinc-300 font-light leading-relaxed mb-6">
+                        Mi objetivo no es pasarte un Excel infinito con 500 bugs menores que a nadie le importan. <span class="text-brand-accent font-medium">Mi objetivo es proteger tu rentabilidad.</span>
+                    </h4>
+                    <p class="text-base md:text-lg text-zinc-500 font-light leading-relaxed">
+                        He visto presupuestos enteros evaporarse en 48 horas por un "game feel" tosco en el tutorial o un soft-lock que el equipo de desarrollo, por ceguera de taller, no pudo ver. Yo pongo un techo de acero a ese riesgo. Actúo como el último filtro implacable antes del jugador.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sistema LaunchGuard -->
+        <section id="metodo" class="py-32 md:py-48 relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-16 md:mb-20 text-center md:text-left gs-reveal">
+                    <span class="text-xs uppercase tracking-[0.2em] text-zinc-600 font-semibold block mb-4">Arquitectura de Servicio</span>
+                    <h2 class="text-4xl md:text-5xl font-medium text-zinc-100 tracking-tight">El Sistema LaunchGuard</h2>
+                    <p class="text-zinc-500 mt-4 text-lg">Cómo aseguro la reputación de tu estudio.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="glass-card p-8 md:p-10 rounded-3xl gs-reveal" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.05">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-900/80 border border-zinc-700/50 flex items-center justify-center mb-8" style="transform: translateZ(30px);">
+                            <i data-lucide="crosshair" class="w-6 h-6 text-zinc-300"></i>
+                        </div>
+                        <h3 class="text-xl font-medium text-zinc-200 tracking-tight mb-4" style="transform: translateZ(20px);">Auditoría de Fricción</h3>
+                        <p class="text-zinc-400 font-light leading-relaxed text-sm" style="transform: translateZ(10px);">
+                            Análisis agresivo de los primeros 120 minutos de gameplay. Detecto y elimino cualquier aspereza en la UX que cause frustración temprana, garantizando la retención inicial.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-8 md:p-10 rounded-3xl gs-reveal" data-delay="0.1" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.05">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-900/80 border border-zinc-700/50 flex items-center justify-center mb-8" style="transform: translateZ(30px);">
+                            <i data-lucide="bot" class="w-6 h-6 text-zinc-300"></i>
+                        </div>
+                        <h3 class="text-xl font-medium text-zinc-200 tracking-tight mb-4" style="transform: translateZ(20px);">QA Técnico (IA)</h3>
+                        <p class="text-zinc-400 font-light leading-relaxed text-sm" style="transform: translateZ(10px);">
+                            No te entrego listas irrelevantes. Utilizo metodologías avanzadas para encontrar "game-breakers" y te doy reportes quirúrgicos, directos y listos para accionar por tus devs.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-8 md:p-10 rounded-3xl gs-reveal" data-delay="0.2" data-tilt data-tilt-max="5" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.05">
+                        <div class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-zinc-900/80 border border-zinc-700/50 flex items-center justify-center mb-8" style="transform: translateZ(30px);">
+                            <i data-lucide="shield" class="w-6 h-6 text-zinc-300"></i>
+                        </div>
+                        <h3 class="text-xl font-medium text-zinc-200 tracking-tight mb-4" style="transform: translateZ(20px);">Blindaje de Reseñas</h3>
+                        <p class="text-zinc-400 font-light leading-relaxed text-sm" style="transform: translateZ(10px);">
+                            Filtro y optimizo el "Game Feel" basado en mi experiencia en proyectos AAA y AA. Transformamos potenciales detractores tempranos en fans que recomiendan el juego.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Casos de Éxito -->
+        <section id="casos" class="py-32 border-y border-white/[0.02] bg-zinc-950/20 relative">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="mb-16 md:mb-20 text-center md:text-left gs-reveal">
+                    <span class="text-xs uppercase tracking-[0.2em] text-zinc-600 font-semibold block mb-4">Evidencia y Resultados</span>
+                    <h2 class="text-4xl md:text-5xl font-medium text-zinc-100 tracking-tight">Estudios Blindados</h2>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <a href="https://ascender.uno/LaunchGuard/victor" target="_blank" rel="noopener noreferrer" 
+                       class="group block glass-card overflow-hidden rounded-[2rem] border border-white/[0.05] hover:border-zinc-500/50 transition-colors duration-500 gs-reveal"
+                       data-tilt data-tilt-max="2" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
+                        
+                        <div class="h-48 w-full bg-[#0a0a0b] border-b border-white/[0.05] relative scanner-container flex items-center justify-center p-6">
+                            <div class="w-full max-w-sm space-y-3 relative z-10">
+                                <div class="h-4 bg-zinc-800/50 rounded w-3/4"></div>
+                                <div class="h-12 border border-zinc-700 bg-zinc-800/30 rounded flex items-center px-4 gap-3 bug-element">
+                                    <div class="w-3 h-3 rounded-full bg-brand-alert animate-pulse group-hover:bg-brand-accent transition-colors"></div>
+                                    <div class="h-2 bg-zinc-600 rounded w-1/2"></div>
+                                </div>
+                                <div class="h-4 bg-zinc-800/50 rounded w-5/6"></div>
+                            </div>
+                            <div class="scanner-line"></div>
+                            <div class="absolute bottom-3 right-4 text-[10px] font-mono text-brand-accent opacity-0 group-hover:opacity-100 transition-opacity">
+                                > FRICTION_RESOLVED : TRUE
+                            </div>
+                        </div>
+
+                        <div class="p-8 md:p-12">
+                            <div class="flex justify-between items-center mb-8" style="transform: translateZ(20px);">
+                                <span class="text-xs font-semibold uppercase tracking-widest text-zinc-500">UX / Progresión</span>
+                                <span class="text-xs font-semibold uppercase tracking-widest text-zinc-500 group-hover:text-zinc-300 transition-colors flex items-center gap-2">
+                                    Ver Caso <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </span>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-medium text-zinc-100 tracking-tight mb-4" style="transform: translateZ(30px);">Caso: Victor</h3>
+                            <p class="text-sm md:text-base text-zinc-400 font-light leading-relaxed" style="transform: translateZ(10px);">
+                                Intervención en fase final de pre-lanzamiento. Identificamos y eliminamos una crisis crítica de UX en la progresión inicial antes de que destruyera la percepción pública.
+                            </p>
+                        </div>
+                    </a>
+
+                    <a href="https://ascender.uno/LaunchGuard/upstairs" target="_blank" rel="noopener noreferrer" 
+                       class="group block glass-card overflow-hidden rounded-[2rem] border border-white/[0.05] hover:border-zinc-500/50 transition-colors duration-500 gs-reveal" data-delay="0.1"
+                       data-tilt data-tilt-max="2" data-tilt-speed="400" data-tilt-glare="true" data-tilt-max-glare="0.1">
+                        
+                        <div class="h-48 w-full bg-[#0a0a0b] border-b border-white/[0.05] relative flex items-end justify-center p-6 gap-3 md:gap-6 pb-8">
+                            <div class="w-12 bg-zinc-800 rounded-t-md chart-bar bar-1 h-[30%]"></div>
+                            <div class="w-12 bg-zinc-700 rounded-t-md chart-bar bar-2 h-[45%]"></div>
+                            <div class="w-12 bg-zinc-600 rounded-t-md chart-bar bar-3 h-[60%]"></div>
+                            <div class="w-12 bg-brand-accent rounded-t-md chart-bar bar-4 h-[90%] shadow-[0_0_15px_rgba(16,185,129,0.4)]"></div>
+                            <div class="absolute top-4 left-4 text-[10px] font-mono text-zinc-500 flex flex-col gap-1">
+                                <span>RETENTION_D1: <span class="text-brand-alert line-through">24%</span></span>
+                                <span class="text-brand-accent group-hover:scale-105 transition-transform origin-left">> OPTIMIZED: 68%</span>
+                            </div>
+                        </div>
+
+                        <div class="p-8 md:p-12">
+                            <div class="flex justify-between items-center mb-8" style="transform: translateZ(20px);">
+                                <span class="text-xs font-semibold uppercase tracking-widest text-zinc-500">Retención D1</span>
+                                <span class="text-xs font-semibold uppercase tracking-widest text-zinc-500 group-hover:text-zinc-300 transition-colors flex items-center gap-2">
+                                    Ver Caso <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                                </span>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-medium text-zinc-100 tracking-tight mb-4" style="transform: translateZ(30px);">Possible One / Upstairs</h3>
+                            <p class="text-sm md:text-base text-zinc-400 font-light leading-relaxed" style="transform: translateZ(10px);">
+                                Auditoría de UX temprana. Rediseño del onboarding táctico y balance de dificultad que incrementó drásticamente la tasa de retención del primer día (D1).
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Garantía Hormozi -->
+        <section class="py-32 relative">
+            <div class="max-w-5xl mx-auto px-6 gs-reveal">
+                <div class="relative rounded-[2.5rem] p-[1px] bg-gradient-to-b from-brand-accent/30 to-transparent shadow-neon-subtle overflow-hidden">
+                    <div class="bg-[#0a0a0b] rounded-[2.5rem] p-10 md:p-20 text-center relative overflow-hidden">
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-40 bg-brand-accent/5 blur-[80px] pointer-events-none"></div>
+                        
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-brand-accent/10 border border-brand-accent/20 flex items-center justify-center mb-8">
+                            <i data-lucide="shield-check" class="w-8 h-8 text-brand-accent"></i>
+                        </div>
+                        <h2 class="text-3xl md:text-5xl font-medium text-zinc-100 tracking-tight mb-6">
+                            Garantía de Riesgo Cero
+                        </h2>
+                        <p class="text-lg md:text-2xl text-zinc-400 font-light leading-relaxed max-w-3xl mx-auto">
+                            Si en la primera semana de auditoría no encuentro al menos <span class="text-zinc-200 font-medium">3 fallos críticos</span> que hundirían tus reseñas en Steam...<br>
+                            <span class="inline-block mt-4 px-4 py-2 bg-brand-accent/10 border border-brand-accent/20 rounded-lg text-brand-accent font-medium text-base md:text-xl">
+                                La consultoría de "Game Feel" es 100% gratis.
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter -->
+        <section id="desglose" class="py-24 border-y border-white/[0.02] bg-zinc-950/30">
+            <div class="max-w-3xl mx-auto px-6 text-center gs-reveal">
+                <i data-lucide="mail" class="w-8 h-8 text-zinc-600 mx-auto mb-6"></i>
+                <h2 class="text-3xl md:text-4xl font-medium text-zinc-100 tracking-tight mb-4">Desglose Semanal</h2>
+                <p class="text-sm md:text-base text-zinc-400 font-light leading-relaxed mb-10">
+                    Auditorías reales, errores caros de otros estudios y tácticas de retención directo en tu bandeja. Sin spam. Solo ingeniería de calidad para Indies.
+                </p>
                 
-                <button onclick="alert('Juanma: Acá conectás el Flow de ManyChat o el enlace de Calendly con las preguntas filtro de calificación.')" class="btn-primary w-full rounded-2xl px-6 py-4 md:px-8 md:py-5 text-base md:text-xl font-bold flex items-center justify-center gap-2 md:gap-3">
-                    <i data-lucide="calendar-check" class="w-5 h-5 md:w-6 md:h-6"></i>
-                    Aplicar para LaunchGuard
-                </button>
+                <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onsubmit="event.preventDefault();">
+                    <input type="email" placeholder="tu@estudio.com" required
+                        class="flex-grow px-6 py-4 rounded-xl bg-[#050505] border border-zinc-800 text-zinc-100 text-sm placeholder-zinc-600 focus:outline-none focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 transition-all">
+                    <button type="submit" 
+                        class="px-8 py-4 rounded-xl bg-zinc-800 text-zinc-200 hover:bg-zinc-700 hover:text-white active:scale-[0.98] transition-all text-xs font-semibold tracking-widest uppercase">
+                        Suscribirme
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- CTA Final -->
+        <section id="cta" class="py-32 md:py-48 relative">
+            <div class="max-w-4xl mx-auto px-6 text-center gs-reveal">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-accent/10 border border-brand-accent/20 text-xs font-semibold uppercase tracking-widest text-brand-accent mb-8">
+                    <span class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></span>
+                    Quedan 2 cupos disponibles
+                </span>
                 
-                <p class="mt-4 md:mt-5 text-[10px] md:text-xs text-white/40 px-4">
-                    Al aplicar, recibirás gratis el entregable: "Checklist de Prevención para Indies".
+                <h2 class="text-5xl md:text-7xl font-medium text-zinc-100 tracking-tighter mb-8">
+                    Tu lanzamiento está en juego.
+                </h2>
+                
+                <p class="text-lg md:text-xl text-zinc-400 font-light leading-relaxed mb-12 max-w-2xl mx-auto">
+                    Trabajo con un volumen muy bajo de estudios para garantizar nivel AAA. Si estás a menos de 3 meses de lanzar, hablemos de Dev a Dev.
+                </p>
+
+                <a href="https://calendly.com/" target="_blank" rel="noopener noreferrer" 
+                    class="inline-block w-full sm:w-auto px-10 md:px-16 py-5 md:py-6 rounded-2xl bg-zinc-100 text-[#050505] hover:bg-white active:scale-[0.98] transition-all text-sm md:text-base font-bold tracking-widest uppercase shadow-premium group">
+                    Aplicar para Auditoría
+                    <i data-lucide="arrow-right" class="inline-block w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <p class="mt-6 text-xs text-zinc-600 font-light">
+                    Al agendar, recibirás gratis la "Checklist de Prevención para Indies".
                 </p>
             </div>
         </section>
+
     </main>
 
     <!-- Footer -->
-    <footer class="py-8 md:py-10 text-white/30 text-xs md:text-sm border-t border-white/5 relative z-10 mt-auto bg-brand-dark/80 backdrop-blur-md">
-        <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center px-6 gap-6">
-            
-            <!-- Copyright & Info -->
-            <div class="flex flex-col items-center md:items-start gap-1 order-2 md:order-1 text-center md:text-left">
-                <p>© 2026 Ezequiel Canello | LaunchGuard QA System.</p>
-                <p class="text-white/20 text-[10px] md:text-xs">Todos los derechos reservados.</p>
+    <footer class="py-12 border-t border-white/[0.05] bg-[#050505] relative z-[95]">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+            <div class="flex flex-col items-center md:items-start gap-2">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-zinc-600"></i>
+                    <span class="font-medium text-sm tracking-widest uppercase text-zinc-500">LaunchGuard</span>
+                </div>
+                <p class="text-[10px] text-zinc-600 uppercase tracking-widest">
+                    © 2026 Ezequiel Canello. Todos los derechos reservados.
+                </p>
             </div>
 
-            <!-- Delta Agency Branding (Powered By) -->
-            <div class="flex flex-col items-center gap-2 order-1 md:order-2">
-                <div class="flex gap-4 mb-2 md:mb-0">
-                    <a href="#" class="p-2 glass-panel border-white/5 hover:bg-white/10 hover:text-white transition-all rounded-full"><i data-lucide="linkedin" class="w-4 h-4 md:w-5 md:h-5"></i></a>
-                    <a href="#" class="p-2 glass-panel border-white/5 hover:bg-white/10 hover:text-white transition-all rounded-full"><i data-lucide="instagram" class="w-4 h-4 md:w-5 md:h-5"></i></a>
-                </div>
-                <a href="#" class="group flex items-center gap-1.5 opacity-60 hover:opacity-100 transition-opacity mt-2 md:mt-0">
-                    <span class="text-[10px] uppercase tracking-widest font-semibold text-white/50">Powered by</span>
-                    <!-- Delta Logo SVG Concept -->
-                    <svg class="w-4 h-4 text-brand-accent group-hover:text-brand-neon transition-colors" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L22 20H2L12 2Z" />
-                    </svg>
-                    <span class="font-display font-bold text-white tracking-tight">DELTA</span>
+            <div class="flex items-center gap-8">
+                <a href="#" class="text-zinc-600 hover:text-zinc-300 transition-colors p-2 glass-panel rounded-full">
+                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd" /></svg>
+                </a>
+                <a href="#" class="text-zinc-600 hover:text-zinc-300 transition-colors p-2 glass-panel rounded-full">
+                    <svg class="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" clip-rule="evenodd" /></svg>
                 </a>
             </div>
-            
+
+            <div class="flex items-center gap-2 opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
+                <span class="text-[10px] uppercase tracking-widest font-semibold text-zinc-500">Powered by</span>
+                <span class="font-bold text-xs tracking-widest text-zinc-300">DELTA</span>
+            </div>
         </div>
     </footer>
 
+    <!-- Lógica Core (GSAP, Lenis, Reveals) -->
     <script>
-        // Initialize Icons
+        // 1. Iconos
         lucide.createIcons();
 
-        // Reveal animations on scroll (iOS sleek feel optimized for mobile)
-        function reveal() {
-            var reveals = document.querySelectorAll(".reveal");
-            for (var i = 0; i < reveals.length; i++) {
-                var windowHeight = window.innerHeight;
-                var elementTop = reveals[i].getBoundingClientRect().top;
-                // Reduce trigger point on mobile for earlier reveal
-                var elementVisible = window.innerWidth < 768 ? 50 : 100; 
-                
-                if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                }
-            }
+        // 2. Vanilla Tilt (El error crítico estaba acá, faltaba el CDN)
+        if(typeof VanillaTilt !== 'undefined') {
+            VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+                max: 5,
+                speed: 400,
+                glare: true,
+                "max-glare": 0.05,
+            });
         }
-        window.addEventListener("scroll", reveal, { passive: true }); // Passive for better mobile scroll performance
-        reveal(); // Trigger once on load
+
+        // 3. Lenis Smooth Scroll
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+            smoothWheel: true,
+            smoothTouch: false
+        });
+
+        // Loop de Lenis sincronizado
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Sincronizar Lenis con GSAP
+        gsap.registerPlugin(ScrollTrigger);
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+
+        // 4. ANIMACIÓN AWWWARDS: HERO TO NAV
+        // Ingeniería Inversa: El logo vive en el nav. Lo agigantamos de entrada y vuelve a su lugar con el scroll.
+        document.addEventListener("DOMContentLoaded", () => {
+            const logo = document.getElementById("nav-logo");
+            const logoIcon = document.getElementById("nav-logo-icon");
+            const navBg = document.getElementById("nav-bg");
+            const heroAnchor = document.getElementById("hero-logo-anchor");
+
+            const isMobile = window.innerWidth < 768;
+            
+            // Calculamos cuánto hay que bajar el logo para que parezca que está en el hero
+            const calculateOffset = () => {
+                const anchorRect = heroAnchor.getBoundingClientRect();
+                const logoRect = logo.getBoundingClientRect();
+                // Retornar la diferencia en Y, asumiendo que el nav está pegado arriba
+                return anchorRect.top - logoRect.top;
+            };
+
+            // Escala Inicial del Logo en el Hero
+            const heroScale = isMobile ? 1.6 : 2.2;
+            const heroY = calculateOffset();
+
+            // Setear el logo gigante en el Hero al cargar
+            gsap.set(logo, { 
+                y: heroY, 
+                scale: heroScale,
+                padding: "16px",
+                backgroundColor: "#050505"
+            });
+            
+            gsap.set(logoIcon, {
+                width: isMobile ? "48px" : "64px",
+                height: isMobile ? "48px" : "64px",
+                background: "linear-gradient(to bottom right, #27272a, #000000)"
+            });
+
+            // Animación al scrollear hacia abajo
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: "#hero",
+                    start: "top top",
+                    end: "bottom top",
+                    scrub: 1 // Efecto manteca iOS
+                }
+            });
+
+            // Devolver el logo a su tamaño y posición en el Navbar
+            tl.to(logo, {
+                y: 0,
+                scale: 1,
+                padding: "8px",
+                backgroundColor: "transparent",
+                borderColor: "transparent",
+                boxShadow: "none",
+                ease: "power2.out"
+            }, 0);
+
+            tl.to(logoIcon, {
+                width: "40px",
+                height: "40px",
+                background: "#18181b",
+                ease: "power2.out"
+            }, 0);
+
+            // Transición del fondo Glass del Navbar
+            ScrollTrigger.create({
+                trigger: "#hero",
+                start: "100px top",
+                onEnter: () => navBg.classList.add("scrolled"),
+                onLeaveBack: () => navBg.classList.remove("scrolled")
+            });
+
+            // 5. GSAP REVEALS (Ahora sí funcionan impecables)
+            const revealElements = document.querySelectorAll('.gs-reveal');
+            
+            // Aseguramos que empiecen invisibles
+            gsap.set(revealElements, { autoAlpha: 0, y: 40 });
+
+            revealElements.forEach((el) => {
+                let delay = el.getAttribute('data-delay') || 0;
+
+                ScrollTrigger.create({
+                    trigger: el,
+                    start: "top 85%", // Dispara cuando entra al 85% de la pantalla
+                    onEnter: () => {
+                        gsap.to(el, {
+                            duration: 1,
+                            autoAlpha: 1,
+                            y: 0,
+                            ease: "power3.out",
+                            delay: parseFloat(delay),
+                            overwrite: "auto"
+                        });
+                    },
+                    once: true // Solo se revela una vez
+                });
+            });
+        });
     </script>
 </body>
 </html>
